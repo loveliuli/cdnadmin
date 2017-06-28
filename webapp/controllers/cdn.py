@@ -33,11 +33,15 @@ def sidebar_data():
 
 @cdn_blueprint.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('indexnew.html')
 
 @cdn_blueprint.route('/logout')
 def logout():
     return  redirect(url_for('main.login'))
+
+@cdn_blueprint.route('/custom')
+def dashboard():
+    return render_template('custom.html')
 
 @cdn_blueprint.route('/post/<int:post_id>', methods=('GET', 'POST'))
 def post(post_id):

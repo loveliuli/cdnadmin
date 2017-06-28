@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: liuli
 # @Date:   2017-03-15 23:27:56
-# @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-06-28 16:04:49
+# @Last Modified by:   liuli
+# @Last Modified time: 2017-06-28 19:22:06
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import AnonymousUserMixin
 from flask import current_app
@@ -57,16 +57,17 @@ class User(db.Model):
     tel = db.Column(db.String(255))
 
 
-    def __init__(self,username,password):
+    def __init__(self,username):
         self.username = username
-        self.password = self.set_password(password)
+        #self.password = self.set_password(password)
 
     def __repr__(self):
         return '<User {0}>'.format(self.password)
 
     #将密码字段进行加密
     def set_password(self,password):
-        return bcrypt.generate_password_hash(password)
+        self.password =bcrypt.generate_password_hash(password)
+        #return bcrypt.generate_password_hash(password) #初始化测试添加用户名和密码时使用。
 
     #检测当前对象的密码是否和传入的密码一致
     def check_password(self,password):
