@@ -9,7 +9,7 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'
-    CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"
-    CELERY_BACKEND_URL = "amqp://guest:guest@localhost:5672//"
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:EhqW{OZzS7XX@localhost/cdnadmin?charset=utf8'
+

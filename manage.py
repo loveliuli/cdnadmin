@@ -1,10 +1,10 @@
 import os
-from flask.ext.script import Manager, Server
-from flask.ext.script.commands import ShowUrls
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager, Server
+from flask_script.commands import ShowUrls
+from flask_migrate import Migrate, MigrateCommand
 
 from webapp import create_app
-from webapp.models import db, User, Post, Tag, Comment
+from webapp.models import db, User, Domain, Charge_info, Charge_statics
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
@@ -24,9 +24,9 @@ def make_shell_context():
         app=app,
         db=db,
         User=User,
-        Post=Post,
-        Tag=Tag,
-        Comment=Comment
+        Domain=Domain,
+        Charge_info=Charge_info,
+        Charge_statics=Charge_statics
     )
 
 if __name__ == "__main__":

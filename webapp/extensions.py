@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # @Author: liuli
 # @Date:   2017-03-18 22:39:53
-# @Last Modified by:   liuli
-# @Last Modified time: 2017-06-27 23:16:58
-
-from flask.ext.login import LoginManager
-
+# @Last Modified by:   XUEQUN
+# @Last Modified time: 2017-06-28 16:03:22
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
@@ -13,6 +12,7 @@ login_manager.session_protection = "strong"
 login_manager.login_message = "Please login to access this page"
 login_manager.login_message_category = "info"
 
+bcrypt = Bcrypt()
 
 @login_manager.user_loader
 def load_user(userid):

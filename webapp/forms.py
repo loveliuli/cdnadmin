@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 # @Author: liuli
 # @Date:   2017-03-15 23:27:56
-# @Last Modified by:   liuli
-# @Last Modified time: 2017-06-27 23:07:09
+# @Last Modified by:   XUEQUN
+# @Last Modified time: 2017-06-28 14:21:45
 #表单工具
 
-from flask_wtf import Form, RecaptchaField
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextAreaField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, EqualTo, URL
 
 from webapp.models import User
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
     name = StringField(
         'Name',
         validators=[DataRequired(), Length(max=255)]
     )
     text = TextAreaField(u'Comment', validators=[DataRequired()])
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('Username', [DataRequired(), Length(max=255)])
     password = PasswordField('Password', [DataRequired()])
     remember = BooleanField("Remember Me")
@@ -32,6 +32,7 @@ class LoginForm(Form):
 
         # Does our the exist
         user = User.query.filter_by(username=self.username.data).first()
+        print user.username
         if not user:
             self.username.errors.append('Invalid username or password')
             return False
@@ -43,11 +44,11 @@ class LoginForm(Form):
 
         return True
 
-class PostForm(Form):
+class PostForm(FlaskForm):
     title = StringField('Title', [DataRequired(), Length(max=255)])
     text = TextAreaField('Content', [DataRequired()])
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     username = StringField('Username', [DataRequired(), Length(max=255)])
     password = PasswordField('Password', [DataRequired(), Length(min=8)])
     confirm = PasswordField('Confirm Password', [
