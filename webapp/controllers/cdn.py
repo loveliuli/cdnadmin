@@ -25,7 +25,7 @@ cdn_blueprint = Blueprint(
 
 @cdn_blueprint.route('/')
 def home():
-    return render_template('custom.html')
+    return render_template('indexnew.html')
 
 @cdn_blueprint.route('/logout')
 def logout():
@@ -33,7 +33,7 @@ def logout():
 
 @cdn_blueprint.route('/custom/')
 def custom():
-    return render_template('custom.html')
+    return render_template('indexnew.html')
 
 
 @cdn_blueprint.route('/dashboard/')
@@ -42,7 +42,7 @@ def dashboard():
 
 @cdn_blueprint.route('/tables/')
 def tables():
-    return render_template('tables.html')
+    return render_template('table.html')
 
 @cdn_blueprint.route('/post/<int:post_id>', methods=('GET', 'POST'))
 def post(post_id):
