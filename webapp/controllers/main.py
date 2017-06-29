@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: XUEQUN
 # @Date:   2017-03-17 11:16:27
-# @Last Modified by:   liuli
-# @Last Modified time: 2017-06-28 19:22:16
+# @Last Modified by:   XUEQUN
+# @Last Modified time: 2017-06-29 17:30:00
 
 from flask import (render_template,
                    current_app,
@@ -53,7 +53,7 @@ def login():
             identity=Identity(user.id)
         )
 
-        flash("You have been logged in.", category="success")
+        #flash("You have been logged in.", category="success")
         return redirect(url_for('cdn.home'))
 
     # openid_errors = oid.fetch_error()
@@ -73,7 +73,7 @@ def logout():
         identity=AnonymousIdentity()
     )
 
-    flash("You have been logged out.", category="success")
+    flash(u"成功退出!", category="success")
     return redirect(url_for('.login'))
 
 
@@ -97,7 +97,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Your user has been created, please login.", category="success")
+        flash(u"用户创建成功，请登陆.", category="success")
 
         return redirect(url_for('.login'))
 

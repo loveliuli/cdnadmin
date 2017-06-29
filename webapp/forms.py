@@ -2,7 +2,7 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:27:56
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-06-28 14:21:45
+# @Last Modified time: 2017-06-29 17:24:50
 #表单工具
 
 from flask_wtf import FlaskForm, RecaptchaField
@@ -32,14 +32,13 @@ class LoginForm(FlaskForm):
 
         # Does our the exist
         user = User.query.filter_by(username=self.username.data).first()
-        print user.username
         if not user:
-            self.username.errors.append('Invalid username or password')
+            self.username.errors.append(u'用户名或密码错误！')
             return False
 
         # Do the passwords match
         if not user.check_password(self.password.data):
-            self.username.errors.append('Invalid username or password')
+            self.username.errors.append(u'用户名或密码错误！')
             return False
 
         return True
@@ -68,7 +67,7 @@ class RegisterForm(FlaskForm):
 
         # Is the username already being used
         if user:
-            self.username.errors.append("User with that name already exists")
+            self.username.errors.append(u"用户名已存在！")
             return False
 
         return True

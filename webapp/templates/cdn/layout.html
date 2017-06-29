@@ -14,7 +14,7 @@
     <!-- FontAwesome Styles-->
     <link href="/static/assets/css/font-awesome.css" rel="stylesheet" />
     <!-- Morris Chart Styles-->
-    <link href="/static/assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <!--link href="/static/assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" /-->
     <!-- Custom Styles-->
     <link href="/static/assets/css/custom-styles.css" rel="stylesheet" />
     <!-- Google Fonts-->
@@ -47,11 +47,11 @@
 		<!-- Dropdown Structure -->
         <!-- 个人资料下拉列表设置 -->
 <ul id="dropdown1" class="dropdown-content">
-<li><a href="#"><i class="fa fa-user fa-fw"></i> My Profile</a>
+<li><a href="#"><i class="fa fa-user fa-fw"></i>个人信息</a>
 </li>
-<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+<li><a href="#"><i class="fa fa-gear fa-fw"></i>用户设置</a>
 </li>
-<li><a href="{{url_for('.logout')}}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+<li><a href="{{url_for('.logout')}}"><i class="fa fa-sign-out fa-fw"></i>退出</a>
 </li>
 </ul>
 	   <!--/. NAV TOP  -->
@@ -65,11 +65,24 @@
                     </li>
 
                     <li>
-                        <a href="{{url_for('cdn.tables') }}" class="{% block tablesisactive %}{% endblock %}"><i class="fa fa-table"></i> Responsive Tables</a>
+                        <a href="{{url_for('cdn.tables') }}" class="{% block tablesisactive %}{% endblock %}"><i class="fa fa-table"></i>计费统计</a>
                     </li>
 
-                    <li>
-                        <a class="{% block customisactive %}{% endblock %}" href="{{url_for('cdn.custom') }}"><i class="fa fa-fw fa-file"></i> Empty Page
+                     <li>
+                        <a href="#" class="{% block domainprojectisactive %}{% endblock %}"><i class="fa fa-sitemap"></i>域名和项目管理<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="{{url_for('cdn.domainadmin') }}">域名管理</a>
+                            </li>
+                            <li>
+                                <a href="{{url_for('cdn.projectadmin') }}">项目管理</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                     <li>
+                        <a class="{% block customisactive %}{% endblock %}" href="{{url_for('cdn.custom') }}"><i class="fa fa-fw fa-file"></i>自定义
                         </a>
                     </li>
                 </ul>
@@ -77,11 +90,7 @@
             </div>
 
         </nav>
-        <footer>
-            <p>Copyright &copy; 2017.Company name All rights reserved.
-                <a target="_blank" href="#"></a>
-            </p>
-        </footer>
+
          {% block content %}{% endblock %}
 
     <!-- JS Scripts block-->
@@ -90,7 +99,11 @@
     <script type="text/javascript">
     {% block js %}{% endblock %}
     </script>
-
+  <footer>
+            <p>Copyright &copy; 2017.Company name All rights reserved.
+                <a target="_blank" href="#"></a>
+            </p>
+        </footer>
 </body>
 
 </html>

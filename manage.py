@@ -1,6 +1,6 @@
 import os
 from flask_script import Manager, Server
-from flask_script.commands import ShowUrls
+from flask_script.commands import ShowUrls,Clean
 from flask_migrate import Migrate, MigrateCommand
 
 from webapp import create_app
@@ -16,7 +16,7 @@ manager = Manager(app)
 manager.add_command("server", Server())
 manager.add_command("show-urls", ShowUrls())
 manager.add_command('db', MigrateCommand)
-
+manager.add_command('clean',Clean())
 
 @manager.shell
 def make_shell_context():

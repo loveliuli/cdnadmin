@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: liuli
 # @Date:   2017-03-15 23:28:39
-# @Last Modified by:   liuli
-# @Last Modified time: 2017-06-28 23:10:54
+# @Last Modified by:   XUEQUN
+# @Last Modified time: 2017-06-29 23:08:28
 from os import path
 import datetime
 from sqlalchemy import func
@@ -25,15 +25,15 @@ cdn_blueprint = Blueprint(
 
 @cdn_blueprint.route('/')
 def home():
-    return render_template('indexnew.html')
+    return render_template('dashboard.html')
 
-@cdn_blueprint.route('/logout')
+@cdn_blueprint.route('/logout/')
 def logout():
-    return  redirect(url_for('main.login'))
+    return  redirect(url_for('main.logout'))
 
 @cdn_blueprint.route('/custom/')
 def custom():
-    return render_template('indexnew.html')
+    return render_template('custom.html')
 
 
 @cdn_blueprint.route('/dashboard/')
@@ -43,6 +43,14 @@ def dashboard():
 @cdn_blueprint.route('/tables/')
 def tables():
     return render_template('table.html')
+
+@cdn_blueprint.route('/domainadmin/')
+def domainadmin():
+    return render_template('domainadmin.html')
+
+@cdn_blueprint.route('/projectamdin/')
+def projectadmin():
+    return render_template('projectadmin.html')
 
 @cdn_blueprint.route('/post/<int:post_id>', methods=('GET', 'POST'))
 def post(post_id):
