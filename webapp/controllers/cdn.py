@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: liuli
 # @Date:   2017-03-15 23:28:39
-# @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-06-28 11:49:45
+# @Last Modified by:   liuli
+# @Last Modified time: 2017-06-28 23:10:54
 from os import path
 import datetime
 from sqlalchemy import func
@@ -23,25 +23,26 @@ cdn_blueprint = Blueprint(
     url_prefix="/cdn"
     )
 
-def sidebar_data():
-    recent = Post.query.order_by(Post.publish_date.desc()).limit(5).all()
-    top_tags = db.session.query(
-        Tag, func.count(tags.c.post_id).label('total')
-    ).join(tags).group_by(Tag).order_by('total DESC').limit(5).all()
-
-    return recent, top_tags
-
 @cdn_blueprint.route('/')
 def home():
-    return render_template('indexnew.html')
+    return render_template('custom.html')
 
 @cdn_blueprint.route('/logout')
 def logout():
     return  redirect(url_for('main.login'))
 
-@cdn_blueprint.route('/custom')
-def dashboard():
+@cdn_blueprint.route('/custom/')
+def custom():
     return render_template('custom.html')
+
+
+@cdn_blueprint.route('/dashboard/')
+def dashboard():
+    return render_template('dashboard.html')
+
+@cdn_blueprint.route('/tables/')
+def tables():
+    return render_template('tables.html')
 
 @cdn_blueprint.route('/post/<int:post_id>', methods=('GET', 'POST'))
 def post(post_id):
@@ -120,31 +121,3 @@ def edit_post(id):
 
     abort(403)
 
-
-@cdn_blueprint.route('/tag/<string:tag_name>')
-def tag(tag_name):
-    tag = Tag.query.filter_by(title=tag_name).first_or_404()
-    posts = tag.posts.order_by(Post.publish_date.desc()).all()
-    recent, top_tags = sidebar_data()
-
-    return render_template(
-        'tag.html',
-        tag=tag,
-        posts=posts,
-        recent=recent,
-        top_tags=top_tags
-    )
-
-@cdn_blueprint.route('/user/<string:username>')
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    posts = user.posts.order_by(Post.publish_date.desc()).all()
-    recent, top_tags = sidebar_data()
-
-    return render_template(
-        'user.html',
-        user=user,
-        posts=posts,
-        recent=recent,
-        top_tags=top_tags
-    )
