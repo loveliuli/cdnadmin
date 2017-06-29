@@ -1,20 +1,19 @@
-﻿{% extends "layout.html" %}
-{% block title %}CDN管理{% endblock %}
+{% extends "layout.html" %}
+{% block title %}域名和项目管理{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
-{% block customisactive %}active-menu waves-effect waves-dark{% endblock %}
+{% block domainprojectisactive %}active-menu waves-effect waves-dark{% endblock %}
 {% block content %}
-<!-- /. NAV SIDE  -->
-        <div id="page-wrapper">
+ <div id="page-wrapper">
           <div class="header">
 
           <h1 class="page-header">
-               自定义页面 <small>新页面</small>
+               域名管理
           </h1>
                 <ol class="breadcrumb">
 
-                      <li><a href="{{url_for('cdn.custom') }}">自定义</a></li>
+                      <li><a href="{{url_for('cdn.domainadmin') }}">域名</a></li>
                       <li class="active">数据</li>
                 </ol>
 
@@ -25,7 +24,7 @@
 
                 <div class="col-md-12">
 
-                     <h1>testbody</h1>
+                     <h1>域名Body</h1>
                 </div>
              <!-- /. PAGE INNER  -->
             </div>
@@ -34,9 +33,7 @@
         </div>
      <!-- /. page-inner  -->
      </div>
-     <!-- /. page-wrapper  -->
-
-   <!-- JS Scripts-->
+    <!-- JS Scripts-->
     <!-- jQuery Js -->
     <script src="/static/assets/js/jquery-1.10.2.js"></script>
 
@@ -47,9 +44,9 @@
 
     <!-- Metis Menu Js -->
     <script src="/static/assets/js/jquery.metisMenu.js"></script>
-    <!-- Morris Chart Js >
+    <!-- Morris Chart Js -->
     <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
-    <script src="/static/assets/js/morris/morris.js"></script-->
+    <script src="/static/assets/js/morris/morris.js"></script>
 
 
     <script src="/static/assets/js/easypiechart.js"></script>
@@ -59,6 +56,5 @@
 
     <!-- Custom Js -->
     <script src="/static/assets/js/custom-scripts.js"></script>
-
 
 {% endblock %}

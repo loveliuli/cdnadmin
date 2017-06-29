@@ -2,7 +2,7 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:28:39
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-06-29 17:31:29
+# @Last Modified time: 2017-06-29 23:08:28
 from os import path
 import datetime
 from sqlalchemy import func
@@ -43,6 +43,14 @@ def dashboard():
 @cdn_blueprint.route('/tables/')
 def tables():
     return render_template('table.html')
+
+@cdn_blueprint.route('/domainadmin/')
+def domainadmin():
+    return render_template('domainadmin.html')
+
+@cdn_blueprint.route('/projectamdin/')
+def projectadmin():
+    return render_template('projectadmin.html')
 
 @cdn_blueprint.route('/post/<int:post_id>', methods=('GET', 'POST'))
 def post(post_id):
