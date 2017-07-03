@@ -4,6 +4,7 @@
   {{ super() }}
 {% endblock %}
 {% block customisactive %}active-menu waves-effect waves-dark{% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
 {% block content %}
 <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
@@ -47,9 +48,9 @@
 
     <!-- Metis Menu Js -->
     <script src="/static/assets/js/jquery.metisMenu.js"></script>
-    <!-- Morris Chart Js >
+    <!-- Morris Chart Js -->
     <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
-    <script src="/static/assets/js/morris/morris.js"></script-->
+    <script src="/static/assets/js/morris/morris.js"></script>
 
 
     <script src="/static/assets/js/easypiechart.js"></script>

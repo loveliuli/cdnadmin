@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # @Author: liuli
 # @Date:   2017-03-15 23:27:56
-# @Last Modified by:   liuli
-# @Last Modified time: 2017-06-28 19:22:06
+# @Last Modified by:   XUEQUN
+# @Last Modified time: 2017-06-30 17:33:39
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import AnonymousUserMixin
 from flask import current_app
@@ -26,13 +29,14 @@ class Project(db.Model):
     project_name = db.Column(db.String(255))
     domains = db.relationship('Domain', backref='project', lazy='dynamic')
     users = db.relationship(
-        'Project',
+        'User',
         secondary=users,
         backref=db.backref('projects', lazy='dynamic')
 )
 #域名表。域名ID、所属CDN厂商、开始使用日期、结束日期、状态、用途，对应的项目ID
 class Domain(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
+    domain_name =  db.Column(db.String(255))
     cname =  db.Column(db.String(255))
     start_date = db.Column(db.DateTime())
     end_date = db.Column(db.DateTime())
@@ -45,7 +49,7 @@ class Domain(db.Model):
         self.cname = cname
 
     def __repr__(self):
-        return "<cname '{0}'>".format(self.cname)
+        return "<cname u'{0}'>".format(self.cname)
 
 #用户表。用户ID、用户名、密码、状态、邮件、电话
 class User(db.Model):
@@ -57,12 +61,12 @@ class User(db.Model):
     tel = db.Column(db.String(255))
 
 
-    def __init__(self,username):
-        self.username = username
+    #def __init__(self,username):
+    #    self.username = username
         #self.password = self.set_password(password)
 
-    def __repr__(self):
-        return '<User {0}>'.format(self.password)
+    #def __repr__(self):
+    #    return '<User u{0}>'.format(self.password)
 
     #将密码字段进行加密
     def set_password(self,password):
