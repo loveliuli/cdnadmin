@@ -3,34 +3,35 @@
 {% block head %}
   {{ super() }}
 {% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
 {% block domainprojectisactive %}active-menu waves-effect waves-dark{% endblock %}
 {% block content %}
  <div id="page-wrapper">
-          <div class="header">
+    <div class="header">
 
-          <h1 class="page-header">
-               域名管理
-          </h1>
-                <ol class="breadcrumb">
+      <h1 class="page-header">
+           域名管理
+      </h1>
+        <ol class="breadcrumb">
 
-                      <li><a href="{{url_for('cdn.domainadmin') }}">域名</a></li>
-                      <li class="active">数据</li>
-                </ol>
+          <li><a href="{{url_for('cdn.domainadmin') }}">域名</a></li>
+          <li class="active">数据</li>
+        </ol>
 
+    </div>
+    <div id="page-inner">
+
+      <div class="row">
+
+        <div class="col-md-12">
+
+             <h1>域名Body</h1>
         </div>
-            <div id="page-inner">
-
-              <div class="row">
-
-                <div class="col-md-12">
-
-                     <h1>域名Body</h1>
-                </div>
-             <!-- /. PAGE INNER  -->
-            </div>
-         <!-- /. row  -->
-            <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
-        </div>
+     <!-- /. PAGE INNER  -->
+    </div>
+ <!-- /. row  -->
+    <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
+</div>
      <!-- /. page-inner  -->
      </div>
     <!-- JS Scripts-->

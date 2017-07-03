@@ -4,7 +4,7 @@ from flask_script.commands import ShowUrls,Clean
 from flask_migrate import Migrate, MigrateCommand
 
 from webapp import create_app
-from webapp.models import db, User, Domain, Charge_info, Charge_statics
+from webapp.models import db, User,Project, Domain, Charge_info, Charge_statics
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
@@ -25,6 +25,7 @@ def make_shell_context():
         db=db,
         User=User,
         Domain=Domain,
+        Project=Project,
         Charge_info=Charge_info,
         Charge_statics=Charge_statics
     )

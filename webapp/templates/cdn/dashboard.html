@@ -4,6 +4,7 @@
   {{ super() }}
 {% endblock %}
  {% block topbutton %}waves-effect waves-dark{% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
  {% block content %}
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
@@ -89,6 +90,8 @@
 
                     </div>
                 </div>
+
+
            <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
             </div>
             <!-- /. PAGE INNER  -->
@@ -112,8 +115,8 @@
     <script src="/static/assets/js/morris/morris.js"></script>
 
 
-    <script src="/static/assets/js/easypiechart.js"></script>
-    <script src="/static/assets/js/easypiechart-data.js"></script>
+    <!--script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script-->
 
      <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
 

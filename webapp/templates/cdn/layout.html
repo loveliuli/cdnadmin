@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
  {% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
-
+    <link rel="icon" href="/static/temp/favicon.ico">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="/static/assets/materialize/css/materialize.min.css" media="screen,projection" />
     <!-- Bootstrap Styles-->
-    <link href="/static/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
     <!-- FontAwesome Styles-->
     <link href="/static/assets/css/font-awesome.css" rel="stylesheet" />
     <!-- Morris Chart Styles-->
-    <!--link href="/static/assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" /-->
+    <link href="/static/assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
     <!-- Custom Styles-->
     <link href="/static/assets/css/custom-styles.css" rel="stylesheet" />
     <!-- Google Fonts-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <link rel="stylesheet" href="/static/assets/js/Lightweight-Chart/cssCharts.css">
     {% block link %}{% endblock %}
+    <style type="text/css">
+        {% block style %}{% endblock %}
+    </style>
 {% endblock %}
 </head>
 <body>
@@ -36,8 +38,8 @@
                 </button>
         <!-- 顶部导航标题URL设置 -->
                 <a class="navbar-brand waves-effect waves-dark" href="{{url_for('cdn.dashboard') }}"><i class="large material-icons">insert_chart</i> <strong>Admin</strong></a>
-        <!-- 顶部导航拉伸效果设置 -->
-		<div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
+            <!-- 顶部导航拉伸效果设置 -->
+    		<div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
             </div>
         <!-- 顶部导航个人资料设置 -->
             <ul class="nav navbar-top-links navbar-right">
@@ -46,14 +48,15 @@
         </nav>
 		<!-- Dropdown Structure -->
         <!-- 个人资料下拉列表设置 -->
-<ul id="dropdown1" class="dropdown-content">
-<li><a href="#"><i class="fa fa-user fa-fw"></i>个人信息</a>
-</li>
-<li><a href="#"><i class="fa fa-gear fa-fw"></i>用户设置</a>
-</li>
-<li><a href="{{url_for('.logout')}}"><i class="fa fa-sign-out fa-fw"></i>退出</a>
-</li>
-</ul>
+
+        <ul id="dropdown1" class="dropdown-content">
+            <li><a href="#"><i class="fa fa-user fa-fw"></i>个人信息</a>
+            </li>
+            <li><a href="#"><i class="fa fa-gear fa-fw"></i>用户设置</a>
+            </li>
+            <li><a href="{{url_for('.logout')}}"><i class="fa fa-sign-out fa-fw"></i>退出</a>
+            </li>
+        </ul>
 	   <!--/. NAV TOP  -->
        <!--  左侧导航条面板设置-->
         <nav class="navbar-default navbar-side" role="navigation">
@@ -69,13 +72,16 @@
                     </li>
 
                      <li>
-                        <a href="#" class="{% block domainprojectisactive %}{% endblock %}"><i class="fa fa-sitemap"></i>域名和项目管理<span class="fa arrow"></span></a>
+                        <a href="#" class="{% block domainprojectisactive %}{% endblock %}"><i class="fa fa-sitemap"></i>配置管理<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="{{url_for('cdn.domainadmin') }}">域名管理</a>
                             </li>
                             <li>
                                 <a href="{{url_for('cdn.projectadmin') }}">项目管理</a>
+                            </li>
+                             <li>
+                                <a href="{{url_for('cdn.priceinfo') }}">CDN价格表</a>
                             </li>
 
                         </ul>
@@ -93,17 +99,14 @@
 
          {% block content %}{% endblock %}
 
+
+
     <!-- JS Scripts block-->
     {% block script %}{% endblock %}
 
     <script type="text/javascript">
     {% block js %}{% endblock %}
     </script>
-  <footer>
-            <p>Copyright &copy; 2017.Company name All rights reserved.
-                <a target="_blank" href="#"></a>
-            </p>
-        </footer>
 </body>
 
 </html>
