@@ -23,6 +23,8 @@
     <style type="text/css">
         {% block style %}{% endblock %}
     </style>
+    <!-- JS Scripts block-->
+    {% block scripts %}{% endblock %}
 {% endblock %}
 </head>
 <body>
@@ -37,7 +39,7 @@
                     <span class="icon-bar"></span>
                 </button>
         <!-- 顶部导航标题URL设置 -->
-                <a class="navbar-brand waves-effect waves-dark" href="{{url_for('cdn.dashboard') }}"><i class="large material-icons">insert_chart</i> <strong>Admin</strong></a>
+                <a class="navbar-brand waves-effect waves-dark" href="{{url_for('cdn.home') }}"><i class="large material-icons">insert_chart</i> <strong>Admin</strong></a>
             <!-- 顶部导航拉伸效果设置 -->
     		<div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
             </div>
@@ -68,7 +70,10 @@
                     </li>
 
                     <li>
-                        <a href="{{url_for('cdn.tables') }}" class="{% block tablesisactive %}{% endblock %}"><i class="fa fa-table"></i>计费统计</a>
+                        <a href="{{url_for('cdn.tables') }}" class="{% block tablesisactive %}{% endblock %}"><i class="fa fa-table"></i>CDN费用详表</a>
+                    </li>
+                     <li>
+                        <a href="{{url_for('cdn.tablestotal') }}" class="{% block tablestotalisactive %}{% endblock %}"><i class="fa fa-desktop"></i>CDN费用汇总</a>
                     </li>
 
                      <li>

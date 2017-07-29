@@ -1,10 +1,10 @@
 {% extends "main/base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}用户登录{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <h1 class="text-center">Login</h1>
+            <h1 class="text-center">用户登录</h1>
             <form method="POST" action="{{ url_for('.login') }}">
                 {{ form.hidden_tag() }}
                 <div class="form-group">

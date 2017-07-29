@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block title %}CDN管理{% endblock %}
+ {% block scripts %}
+<script src="/static/assets/js/year_month_day.js"></script>
+{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -19,77 +22,259 @@
                     </ol>
 
         </div>
+
+
             <div id="page-inner">
 
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-3">
+    <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main-fastweb" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main-fastweb'));
 
-                        <div class="card horizontal cardIcon waves-effect waves-dark">
-                        <div class="card-image red">
-                        <i class="fa fa-eye fa-5x"></i>
-                        </div>
-                        <div class="card-stacked">
-                        <div class="card-content">
-                        <h3>16,150</h3>
-                        </div>
-                        <div class="card-action">
-                        <strong> Daily Visits</strong>
-                        </div>
-                        </div>
-                        </div>
+    var option = {
+        title: {
+            text: '快网-端游-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_legend_fastweb|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:0,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
 
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3">
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_fastweb_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_fastweb_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<br/>
+    <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main-client" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main-client'));
 
-                        <div class="card horizontal cardIcon waves-effect waves-dark">
-                        <div class="card-image orange">
-                        <i class="fa fa-shopping-cart fa-5x"></i>
-                        </div>
-                        <div class="card-stacked">
-                        <div class="card-content">
-                        <h3>25,550</h3>
-                        </div>
-                        <div class="card-action">
-                        <strong> Sales</strong>
-                        </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3">
+    var option = {
+        title: {
+            text: '网宿-端游-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_client_wangsu|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:0,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
 
-                            <div class="card horizontal cardIcon waves-effect waves-dark">
-                        <div class="card-image blue">
-                        <i class="fa fa-comments fa-5x"></i>
-                        </div>
-                        <div class="card-stacked">
-                        <div class="card-content">
-                        <h3>11,225</h3>
-                        </div>
-                        <div class="card-action">
-                        <strong> Comments</strong>
-                        </div>
-                        </div>
-                        </div>
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_wangsu_client_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_wangsu_client_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
 
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3">
+<br/>
+<br/>
 
-                    <div class="card horizontal cardIcon waves-effect waves-dark">
-                        <div class="card-image">
-                        <i class="fa fa-users fa-5x"></i>
-                        </div>
-                        <div class="card-stacked">
-                        <div class="card-content">
-                        <h3>72,525</h3>
-                        </div>
-                        <div class="card-action">
-                        <strong> Visits</strong>
-                        </div>
-                        </div>
-                        </div>
+      <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main-phone" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main-phone'));
 
-                    </div>
-                </div>
+    var option = {
+        title: {
+            text: '网宿-手游-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_legend_phone_wangsu|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:-30,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_wangsu_phone_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_wangsu_phone_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<br/>
+<br/>
+
+     <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main'));
+
+    var option = {
+        title: {
+            text: '网宿-汇总-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_legend_wangsu|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:-30,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
+
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_wangsu_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_wangsu_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+   <br/>
+   <br/>
 
 
            <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>

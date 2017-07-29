@@ -4,17 +4,17 @@
   {{ super() }}
 {% endblock %}
  {% block loginuser %}{{login_user}}{% endblock %}
-{% block tablesisactive %}active-menu waves-effect waves-dark{% endblock %}
+{% block tablestotalisactive %}active-menu waves-effect waves-dark{% endblock %}
 {% block content %}
 <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
           <div class="header">
                         <h1 class="page-header">
-                            CDN计费详情
+                            CDN费用汇总
                         </h1>
                         <ol class="breadcrumb">
 
-                      <li><a href="{{url_for('cdn.tables') }}">CDN计费详情</a></li>
+                      <li><a href="{{url_for('cdn.tablestotal') }}">CDN费用汇总</a></li>
                       <li class="active">数据</li>
                     </ol>
         </div>
@@ -31,25 +31,18 @@
                                         <tr>
                                             <th>计费日期</th>
                                             <th>计费厂商</th>
-                                            <th>计费类型</th>
                                             <th>计费项目</th>
-                                            <th>计费区域</th>
-                                            <th>分摊带宽(MB)</th>
                                             <th>分摊费用(元)</th>
-                                            <th>占比(%)</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
-                                           {% for static in price %}
+                                           {% for static in prices %}
                                 <tr class="odd gradeX">
-                                    <td>{{static.charge_date|datetimeformat("%Y-%m")}}</td>
-                                    <td>{{static.charge_cname}}</td>
-                                    <td>{{static.charge_type}}</td>
-                                    <td>{{static.charge_project}}</td>
-                                    <td>{{static.charge_area}}</td>
-                                    <td>{{static.charge_traff}}</td>
-                                    <td>{{static.charge_total}}</td>
-                                    <td>{{static.charge_percent}}</td>
+                                    <td>{{static[0]|datetimeformat("%Y-%m")}}</td>
+                                    <td>{{static[1]}}</td>
+                                    <td><a href="{{url_for('cdn.tablestotalgroup')}}?myproject={{static.charge_project}}&mydate={{static.charge_date}}&mycname={{static.charge_cname}}">{{static[2]}}</td>
+                                    <td>{{static[3]|round(3)}}</td>
                                 </tr>
                                 {% endfor %}
                                     </tbody>

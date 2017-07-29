@@ -2,9 +2,10 @@
 # @Author: liuli
 # @Date:   2017-03-18 22:39:53
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-06-28 16:03:22
+# @Last Modified time: 2017-07-11 22:48:08
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_admin import Admin
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
@@ -13,6 +14,7 @@ login_manager.login_message = "Please login to access this page"
 login_manager.login_message_category = "info"
 
 bcrypt = Bcrypt()
+admin = Admin()
 
 @login_manager.user_loader
 def load_user(userid):
