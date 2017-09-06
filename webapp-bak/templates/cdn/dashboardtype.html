@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block title %}CDN管理{% endblock %}
+ {% block scripts %}
+<script src="/static/assets/js/year_month_day.js"></script>
+{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+ {% block topbutton %}waves-effect waves-dark{% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
+ {% block content %}
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+          <div class="header">
+                        <h1 class="page-header">
+                            Dashboard
+                        </h1>
+                        <ol class="breadcrumb">
+
+                      <li><a href="{{url_for('cdn.dashboard') }}">Dashboard</a></li>
+                      <li class="active">Data</li>
+                    </ol>
+        </div>
+
+
+            <div id="page-inner">
+                <div class="row" >
+                <div class="select-block">
+                        <span class="title">请选择:</span>
+                        <select style="display:inline-block;width:120px"  name="gametype" id="gametype" >
+                            <option value="blank" >游戏类型</option>
+                            <option value="client" >端游</option>
+                            <option value="phone" >手游</option>
+                            <option value="other" >其他</option>
+                        </select>
+                </div>
+                </div>
+               <div class="row">
+                {% for pro in charge_statics%}
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="card horizontal cardIcon waves-effect waves-dark"  style="width:250px;height:100px">
+                        <div class="{{fa_color|random()}}">
+                        <i class="{{fa_list|random()}}"></i>
+                        </div>
+                        <div class="card-stacked">
+                        <div class="card-content">
+                        <h5><a href="/cdn/dashboard/{{pro[1]}}/">￥{{pro[2]|round(2)}}元</a></h5>
+                        </div>
+                        <div class="card-action">
+                        <h5><strong>{{pro[1]}}</strong></h5>
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+
+
+           <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
+            </div>
+            <!-- /. PAGE INNER  -->
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+    <!-- /. WRAPPER  -->
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+
+    <!-- Bootstrap Js -->
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/materialize/js/materialize.min.js"></script>
+
+    <!-- Metis Menu Js -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+
+
+    <!--script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script-->
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/static/assets/js/custom-scripts.js"></script>
+
+    <script type="text/javascript">
+        {% block js %}
+        $("document").ready(function() {
+
+             $('select').change(function() {
+                var gametype=jQuery('#gametype').val();
+
+                console.log(gametype);
+
+            var params = {};
+            params['gametype'] = jQuery('#gametype').val();
+            console.log(params);
+            window.location.replace('{{url_for('cdn.dashboard')}}'+'index/'+gametype+'/');
+       })
+
+   });
+
+
+        {% endblock %}
+    </script>
+
+{% endblock %}
+

@@ -2,10 +2,12 @@
 # @Author: liuli
 # @Date:   2017-03-18 22:39:53
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-07-11 22:48:08
+# @Last Modified time: 2017-08-08 21:28:45
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_admin import Admin
+from flask_restful import Api
+
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
@@ -15,6 +17,7 @@ login_manager.login_message_category = "info"
 
 bcrypt = Bcrypt()
 admin = Admin()
+rest_api = Api()
 
 @login_manager.user_loader
 def load_user(userid):

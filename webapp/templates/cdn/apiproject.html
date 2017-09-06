@@ -1,0 +1,212 @@
+﻿{% extends "layout.html" %}
+{% block title %}CDN管理{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block apiisactive %}active-menu waves-effect waves-dark{% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
+{% block content %}
+<!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+          <div class="header">
+
+          <h1 class="page-header">
+               项目管理 <small>API</small>
+          </h1>
+                <ol class="breadcrumb">
+
+                      <li><a href="{{url_for('cdn.apiproject') }}">项目管理 API</a></li>
+                      <li class="active">数据</li>
+                </ol>
+
+        </div>
+            <div id="page-inner">
+
+              <div class="row">
+
+                <div class="col-md-12">
+
+<p style="white-space:normal;">
+<a href="#apiget">1、Project API GET方法使用</a><br/>
+</p>
+<p style="white-space:normal;">
+<a href="#apipost">2、Project API POST方法使用</a><br/>
+</p>
+<p style="white-space:normal;">
+<a href="#apiput">3、Project API PUT方法使用</a><br/>
+</p>
+<p style="white-space:normal;">
+<a href="#apidelete">4、Project API DELETE方法使用</a><br/>
+</p>
+
+<h1 id="apiget" style="white-space:normal;" ><strong>一、GET方法</strong></h3><br/>
+<h3 id="apipurpose" style="green-space:normal;"><strong>1. 功能说明</strong></h3><br/>
+   <div><strong>通过id获取项目信息。</strong></div>
+   <div><strong> curl http://localhost:5000/api/project/61/</strong></div>
+   <span>
+      结果如下：
+<div>
+<pre>
+  {
+      "domains": [
+          {
+              "domain_name": "test.kingsoft.com"
+          }
+      ],
+      "id": 61,
+      "project_name": "test",
+      "users": [
+          {
+              "username": "test"
+          },
+          {
+              "username": "admin"
+          }
+      ]
+  }
+</pre>
+</div>
+</span>
+<span><strong>如果没有id，则默认获取第一页项目信息(每页默认10条记录)，可以指定page参数。例如：?page=2</strong></span>
+<div> <strong>curl http://localhost:5000/api/project?page=2</strong></div>
+<div>
+<pre>
+  [
+    {
+        "domains": [
+            {
+                "domain_name": "update.gcg.kingsoft.com"
+            }
+        ],
+        "id": 17,
+        "project_name": "\u5c11\u5973\u5496\u5561\u67aa",
+        "users": []
+    },
+    {
+        "domains": [
+            {
+                "domain_name": "tghfhh.dl.kingsoft.com"
+            }
+        ],
+        "id": 18,
+        "project_name": "\u7279\u5de5\u7687\u5983-\u56de\u5408\u5236",
+        "users": []
+    },
+    {
+        "domains": [
+            {
+                "domain_name": "update.sgzs.xoyo.com"
+            }
+        ],
+        "id": 22,
+        "project_name": "\u4e09\u56fd\u6218\u795e",
+        "users": []
+    },
+    {
+        "domains": [
+            {
+                "domain_name": "update.sniper.xoyo.com"
+            }
+        ],
+        "id": 23,
+        "project_name": "\u751f\u6b7b\u963b\u51fb",
+        "users": []
+    }
+]
+</pre>
+</div>
+
+<h3 id="apipost"><strong>二、POST方法</strong></h3><br/>
+   <span><strong>新增项目信息，需要指定项目名称，这是必选项，同时token也必须带上，否则验证不能通过，无法添加项目。</strong></span>
+   <div>
+   <pre>
+   <strong>
+   curl
+   -d "project_name=test111"
+   -d "token=eyJhbGciOiJIUzI1NiIsImV4cCI6MT"
+   http://localhost:5000/api/project
+   </strong>
+    </pre>
+    </div>
+   <span>
+      结果如下：
+<div>
+<pre>
+ 62
+</pre>
+</div>
+</span>
+
+<h3 id="apiput"><strong>二、PUT方法</strong></h3><br/>
+   <span><strong>修改项目信息，需要指定新的项目名称，这是必选项，同时token也必须带上，否则验证不能通过，无法修改项目。</strong></span>
+   <div>
+   <pre>
+   curl -X PUT
+   -d "project_name=test222"
+   -d "token=eyJhbGciOiJIUzI1NiIsImV4cCI6MT"
+   http://localhost:5000/api/project/62/
+    </pre>
+    </div>
+   <span>
+      结果如下：
+<div>
+<pre>
+ 62
+</pre>
+</div>
+</span>
+
+<h3 id="apidelete"><strong>二、DELETE方法</strong></h3><br/>
+   <span><strong>删除项目信息，需要指定项目id，这是必选项，同时token也必须带上，否则验证不能通过，无法删除项目。</strong></span>
+   <div>
+   <pre>
+   curl -X DELETE
+   -d "token=eyJhbGciOiJIUzI1NiIsImV4cCI6MT"
+   http://localhost:5000/api/project/62/
+    </pre>
+    </div>
+   <span>
+      结果如下：
+<div>
+<pre>
+ 62
+</pre>
+</div>
+</span>
+
+                </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. row  -->
+            <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
+        </div>
+     <!-- /. page-inner  -->
+     </div>
+     <!-- /. page-wrapper  -->
+
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+
+    <!-- Bootstrap Js -->
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/materialize/js/materialize.min.js"></script>
+
+    <!-- Metis Menu Js -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+
+
+    <script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script>
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/static/assets/js/custom-scripts.js"></script>
+
+
+{% endblock %}

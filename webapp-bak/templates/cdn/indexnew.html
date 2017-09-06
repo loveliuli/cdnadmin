@@ -1,0 +1,64 @@
+﻿{% extends "layout.html" %}
+{% block title %}CDN管理{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block customisactive %}active-menu waves-effect waves-dark{% endblock %}
+{% block content %}
+<!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+          <div class="header">
+
+          <h1 class="page-header">
+               Empty Page <small>Create new page.</small>
+          </h1>
+                <ol class="breadcrumb">
+
+                      <li><a href="{{url_for('cdn.custom') }}"> custom</a></li>
+                      <li class="active">Data</li>
+                </ol>
+
+        </div>
+            <div id="page-inner">
+
+              <div class="row">
+
+                    <div class="col-md-12">
+
+                     <h1>testbody</h1>
+                </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. row  -->
+            <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
+        </div>
+     <!-- /. page-inner  -->
+     </div>
+     <!-- /. page-wrapper  -->
+
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+
+    <!-- Bootstrap Js -->
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/materialize/js/materialize.min.js"></script>
+
+    <!-- Metis Menu Js -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+
+
+    <script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script>
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/static/assets/js/custom-scripts.js"></script>
+
+
+{% endblock %}

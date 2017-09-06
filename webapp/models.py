@@ -2,7 +2,7 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:27:56
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-07-28 09:57:30
+# @Last Modified time: 2017-08-22 20:18:08
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -12,6 +12,11 @@ from flask import current_app
 from webapp.extensions import bcrypt
 from sqlalchemy import func
 import datetime
+from itsdangerous import (
+    TimedJSONWebSignatureSerializer as Serializer,
+    BadSignature,
+    SignatureExpired
+)
 
 db = SQLAlchemy()
 
@@ -63,8 +68,8 @@ class User(db.Model):
     tel = db.Column(db.String(255))
 
 
-    #def __init__(self,username):
-    #    self.username = username
+    def __init__(self,username):
+        self.username = username
         #self.password = self.set_password(password)
 
     #def __repr__(self):

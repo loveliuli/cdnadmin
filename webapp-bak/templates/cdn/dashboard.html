@@ -1,0 +1,313 @@
+{% extends "layout.html" %}
+{% block title %}CDN管理{% endblock %}
+ {% block scripts %}
+<script src="/static/assets/js/year_month_day.js"></script>
+{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+ {% block topbutton %}waves-effect waves-dark{% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
+ {% block content %}
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+          <div class="header">
+                        <h1 class="page-header">
+                            Dashboard
+                        </h1>
+                        <ol class="breadcrumb">
+
+                      <li><a href="{{url_for('cdn.dashboard') }}">Dashboard</a></li>
+                      <li class="active">Data</li>
+                    </ol>
+
+        </div>
+
+
+            <div id="page-inner">
+
+    <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main-fastweb" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main-fastweb'));
+
+    var option = {
+        title: {
+            text: '快网-端游-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_legend_fastweb|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:0,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
+
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_fastweb_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_fastweb_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<br/>
+    <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main-client" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main-client'));
+
+    var option = {
+        title: {
+            text: '网宿-端游-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_client_wangsu|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:0,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
+
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_wangsu_client_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_wangsu_client_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+
+<br/>
+<br/>
+
+      <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main-phone" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main-phone'));
+
+    var option = {
+        title: {
+            text: '网宿-手游-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_legend_phone_wangsu|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:-30,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_wangsu_phone_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_wangsu_phone_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<br/>
+<br/>
+
+     <!-- 柱状图-->
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:400px;width:1000px"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript" src="{{url_for('static', filename='echarts-2.2.7/js/echarts-all.js')}}" ></script>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main'));
+
+    var option = {
+        title: {
+            text: '网宿-汇总-CDN费用(元)',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['2017-05','2017-06']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        xAxis: {
+            type: 'category',
+            data: {{project_legend_wangsu|safe}},
+            axisLabel:{
+                         interval:0,//横轴信息全部显示
+                         rotate:-30,//-30度角倾斜显示
+                textStyle:{
+                             color:"red"
+                         }
+                    }
+        },
+        series: [
+
+            {
+                name: '2017-05',
+                type: 'bar',
+                data: {{status_data_wangsu_5|safe}}
+            },
+            {
+                name: '2017-06',
+                type: 'bar',
+                data: {{status_data_wangsu_6|safe}}
+            }
+        ]
+    };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+   <br/>
+   <br/>
+
+
+           <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
+            </div>
+            <!-- /. PAGE INNER  -->
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+    <!-- /. WRAPPER  -->
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+
+    <!-- Bootstrap Js -->
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/materialize/js/materialize.min.js"></script>
+
+    <!-- Metis Menu Js -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+
+
+    <!--script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script-->
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/static/assets/js/custom-scripts.js"></script>
+
+
+{% endblock %}
+

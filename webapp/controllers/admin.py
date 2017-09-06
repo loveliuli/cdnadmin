@@ -23,9 +23,11 @@ class CustomView(BaseView):
 
 class CustomModelView(ModelView):
     def is_accessible(self):
+        print current_user
         return current_user.is_authenticated()
 
 
 class CustomFileAdmin(FileAdmin):
     def is_accessible(self):
+        print current_user
         return current_user.is_authenticated()

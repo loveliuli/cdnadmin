@@ -2,7 +2,7 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:28:39
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-07-29 15:09:06
+# @Last Modified time: 2017-08-12 14:13:08
 import os,time
 from os import path
 import datetime,json
@@ -56,6 +56,7 @@ def insert_traffic_data(cname,year,month,download_type=None,download_domain=None
     if cname =='fastweb':
         os.chdir('/usr/local/src/myproject/cdnadmin/webapp/utils')
         _rt_statics,total_money = fastwebstatics.get_statics_result(year,month)
+        #print _rt_statics,total_money
     elif cname == 'wangsu' and download_type=='http':
         _rt_statics = wangsustatics.get_traffic_result(myflag=download_type,mydomain=project_http.domain,year=year,month=month)
     elif  cname == 'wangsu' and download_type=='https':
@@ -97,7 +98,7 @@ def insert_domain(domain_cname):
                 new_domain = Domain()
                 new_domain.cname = '快网'
                 new_domain.status = 1
-                new_domain.purpose = ''
+                new_domain.purpose = '快网-HTTP下载加速'
                 new_domain.project_id = project_id
                 new_domain.domain_name = v
                 new_domain.end_date = datetime.datetime.now()+datetime.timedelta(1000)
@@ -113,7 +114,7 @@ def insert_domain(domain_cname):
                 new_domain = Domain()
                 new_domain.cname = '网宿'
                 new_domain.status = 1
-                new_domain.purpose = ''
+                new_domain.purpose = '网宿-HTTP下载加速'
                 new_domain.project_id = project_id
                 new_domain.domain_name = v
                 new_domain.end_date = datetime.datetime.now()+datetime.timedelta(1000)
@@ -129,7 +130,7 @@ def insert_domain(domain_cname):
                 new_domain = Domain()
                 new_domain.cname = '网宿'
                 new_domain.status = 1
-                new_domain.purpose = ''
+                new_domain.purpose = '网宿-HTTPS下载加速'
                 new_domain.project_id = project_id
                 new_domain.domain_name = v
                 new_domain.end_date = datetime.datetime.now()+datetime.timedelta(1000)
@@ -152,24 +153,47 @@ def get_current_user():
     #return prices
 
 @cdn_blueprint.route('/')
+@login_required
 def home():
     cur_user = get_current_user()
-    print cur_user
-    return render_template('dashboardshow.html',login_user=cur_user.username)
+    distinct_cname_list = db.session.query(func.distinct(Charge_statics.charge_cname)).all()
+    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).group_by(Charge_statics.charge_project).all()
+    fa_list = ["fa fa-eye fa-5x","fa fa-shopping-cart fa-5x","fa fa-comments fa-5x","fa fa-users fa-5x","fa fa-bug fa-5x","fa fa-calendar fa-5x","fa fa-cloud-upload fa-5x","fa fa-cloud-download fa-5x"]
+    fa_color = ["card-image red","card-image orange","card-image blue","card-image"]
+    return render_template('dashboardtype.html',login_user=cur_user.username,charge_statics=charge_statics,fa_list=fa_list,fa_color=fa_color)
 
 @cdn_blueprint.route('/logout/')
 def logout():
     return  redirect(url_for('main.logout'))
 
 @cdn_blueprint.route('/custom/')
+@login_required
 def custom():
     cur_user = get_current_user()
     #insert_traffic_data('wangsu',2017,6,download_type='http',download_domain=project_http.domain)
-    #insert_domain('wangsu_https')
+    #insert_domain('fastweb')
     return render_template('custom.html',login_user=cur_user.username,price='successed!')
 
+@cdn_blueprint.route('/apiauth/')
+@login_required
+def apiauth():
+    cur_user = get_current_user()
+    return render_template('apiauth.html',login_user=cur_user.username,price='API使用说明!')
+
+@cdn_blueprint.route('/apiproject/')
+@login_required
+def apiproject():
+    cur_user = get_current_user()
+    return render_template('apiproject.html',login_user=cur_user.username,price='API使用说明!')
+
+@cdn_blueprint.route('/apidomain/')
+@login_required
+def apidomain():
+    cur_user = get_current_user()
+    return render_template('apidomain.html',login_user=cur_user.username,price='API使用说明!')
 
 @cdn_blueprint.route('/dashboard/')
+@login_required
 def dashboard():
     cur_user = get_current_user()
     project_legend_fastweb,status_data_fastweb_5=Charge_statics.get_charge_statics(charge_date='2017-05-01 00:00:00',charge_cname='快网')
@@ -189,23 +213,77 @@ def dashboard():
 
         )
 
-@cdn_blueprint.route('/dashboard/<int:year>/<int:month>/', methods=('GET', 'POST'))
-def dashboardshow(year,month):
+@cdn_blueprint.route('/dashboard/index/<string:gametype>/', methods=('GET', 'POST'))
+@login_required
+def dashboardshowtype(gametype):
     cur_user = get_current_user()
-    rt_list = []
-    select_time = '%s-%s-01 00:00:00' %(year,month)
-    #distinct_date_list = db.session.query(func.distinct(Charge_statics.charge_date)).all()
+    client_game = ['剑一','剑二','封神一','剑三','剑世','月影','反恐行动','猎魔','蜂鸟','春秋','麻辣江湖','封神三','格斗灌篮王']
+    other = ['数据中心','tako','公共']
     distinct_cname_list = db.session.query(func.distinct(Charge_statics.charge_cname)).all()
-    #for d in distinct_date_list:
-    for c in distinct_cname_list:
-        charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_cname.label('charge_cname'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).filter_by(charge_date=select_time).filter_by(charge_cname=c[0]).group_by(Charge_statics.charge_project).all()
-        rt_list.extend(charge_statics)
-    _is_ok=True
+    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).group_by(Charge_statics.charge_project).all()
+    charge_statics_client_game = []
+    charge_statics_phone_game = []
+    charge_statics_other_game = []
+    for item in charge_statics:
+        if item[1] in client_game and item[1] not in other:
+            charge_statics_client_game.append(item)
+        elif item[1] in other:
+            charge_statics_other_game.append(item)
+        else:
+            charge_statics_phone_game.append(item)
+    #print charge_statics_phone_game,charge_statics_client_game
+    fa_list = ["fa fa-eye fa-5x","fa fa-shopping-cart fa-5x","fa fa-comments fa-5x","fa fa-users fa-5x","fa fa-bug fa-5x","fa fa-calendar fa-5x","fa fa-cloud-upload fa-5x","fa fa-cloud-download fa-5x"]
+    fa_color = ["card-image red","card-image orange","card-image blue","card-image"]
+    if gametype == 'client':
+        return render_template('dashboardtype.html',login_user=cur_user.username,charge_statics=charge_statics_client_game,fa_list=fa_list,fa_color=fa_color)
+    elif gametype == 'phone':
+        return render_template('dashboardtype.html',login_user=cur_user.username,charge_statics=charge_statics_phone_game,fa_list=fa_list,fa_color=fa_color)
+    else:
+        return render_template('dashboardtype.html',login_user=cur_user.username,charge_statics=charge_statics_other_game,fa_list=fa_list,fa_color=fa_color)
 
-    return render_template('dashboardshow.html',login_user=cur_user.username,year=year,month=month)
-    #return json.dumps({'is_ok':True, "error":u'success'})
+@cdn_blueprint.route('/dashboard/<string:project>/', methods=('GET', 'POST'))
+@login_required
+def dashboardshowproject(project):
+    cur_user = get_current_user()
+    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_cname.label('charge_cname'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).filter_by(charge_project=project).group_by(Charge_statics.charge_cname,Charge_statics.charge_date).all()
+    legend_list = []
+    xaxis_list = []
+    #{'cname1':[(date1,data1),(date2,data2)],'cname2':[(date1,data1),(date2,data2)]}
+    data_dic = {}
+    rt_dic = {}
+    data_list = []
+
+    for s in charge_statics:
+        if s.charge_cname in legend_list:continue
+        legend_list.append(s.charge_cname)
+    for s in charge_statics:
+        if s.charge_date.strftime('%Y-%m') in xaxis_list:continue
+        xaxis_list.append(s.charge_date.strftime('%Y-%m'))
+
+    for rr in legend_list:
+        for rt in charge_statics:
+            if rr == rt.charge_cname:
+                #print rt[3],type(rt[3])
+                data_list.append((rt[0].strftime('%Y-%m'),round(rt[3],3)))
+        data_dic[rr]=data_list
+        data_list = []
+
+    for cname,value in data_dic.items():
+        rt_dic[cname]=[x[1] for x in value]
+    #print rt_dic
+    color_list = ['rgb(0,136,212)','rgb(219,50,51)']
+    return render_template('dashboardshowproject.html',
+        login_user=cur_user.username,
+        charge_statics=charge_statics,
+        legend_list=json.dumps(data_dic.keys()),
+        xaxis_list=json.dumps(xaxis_list),
+        rt_dic=rt_dic,
+        color_list=color_list
+        )
+
 
 @cdn_blueprint.route('/tables/')
+@login_required
 def tables():
     cur_user = get_current_user()
     #price = get_price()
@@ -218,6 +296,7 @@ def tables():
     #return render_template('table.html',login_user=cur_user.username,statics=_rt_statics)
 
 @cdn_blueprint.route('/tablestotal/')
+@login_required
 def tablestotal():
     cur_user = get_current_user()
     rt_list = []
@@ -230,6 +309,7 @@ def tablestotal():
     return render_template('tabletotal.html',login_user=cur_user.username,prices=rt_list)
 
 @cdn_blueprint.route('/tablestotalgroup/')
+@login_required
 def tablestotalgroup():
     project = request.args.get('myproject','')
     mydate =  request.args.get('mydate','')
@@ -244,6 +324,7 @@ def tablestotalgroup():
     return render_template('tabletotalgroup.html',login_user=cur_user.username,prices=rt_list)
 
 @cdn_blueprint.route('/tablestatics/',methods=['GET'])
+@login_required
 def tablestatics():
     cur_user = get_current_user()
     project = request.args.get('myproject','')
@@ -276,6 +357,7 @@ def tablestatics():
     return render_template('tablestatics.html',login_user=cur_user.username,rt_area=json.dumps(rt_area),rt_result=json.dumps(rt_result),rt_cname=mycname,rt_project=project,rt_date=mydate,rt_domains=domain_list)
 
 @cdn_blueprint.route('/domainadmin/')
+@login_required
 def domainadmin():
     domain_status = {0:"已停用",1:"使用中"}
     project = Project.query.all()
@@ -288,6 +370,7 @@ def domainadmin():
 创建域名信息
 '''
 @cdn_blueprint.route('/domain/create/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
+@login_required
 def create_domain():
     domain_status = [(0,"已停用"),(1,"使用中")]
     cdn_names = [("网宿","网宿"),("快网","快网")]
@@ -298,8 +381,8 @@ def create_domain():
     return render_template('domain_create.html',domain_status=domain_status,projects=projects,cdn_names=cdn_names)
 
 
-def check_domain(domain):
-    check_domain_isexists = Domain.query.filter_by(domain_name=domain).all()
+def check_domain(cname,domain):
+    check_domain_isexists = Domain.query.filter_by(domain_name=domain).filter_by(cname=cname).all()
     if len(check_domain_isexists)==0:
         return (True,u'添加项目成功!')
     else:
@@ -309,6 +392,7 @@ def check_domain(domain):
 新增域名信息
 '''
 @cdn_blueprint.route('/domain/add/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
+@login_required
 def add_domain():
     cname = request.form.get('cdn_name','')
     start_date = request.form.get('start_date')
@@ -317,7 +401,7 @@ def add_domain():
     purpose = request.form.get('purpose')
     domain = request.form.get('domain')
     project_id = request.form.get('project_id')
-    _is_ok, _error = check_domain(domain)
+    _is_ok, _error = check_domain(cname,domain)
     if not start_date:
         start_date = datetime.datetime.now()
     if not end_date:
@@ -341,6 +425,7 @@ def add_domain():
 '''
 
 @cdn_blueprint.route('/domain/delete/', methods=['GET'])
+@login_required
 def delete_domain():
     pid = request.args.get('id')
     domain = Domain.query.filter_by(id=pid).first()
@@ -354,6 +439,7 @@ def delete_domain():
 更新域名信息
 '''
 @cdn_blueprint.route('/domain/update/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
+@login_required
 def update_domain():
     domain_status = [(0,"已停用"),(1,"使用中")]
     cdn_names = [("网宿","网宿"),("快网","快网")]
@@ -367,6 +453,7 @@ def update_domain():
 接受前端js提交过来的id，回显整条数据信息
 '''
 @cdn_blueprint.route('/getdomaininfo/<id>')
+@login_required
 def get_domain_by_id(id):
     _rt = {}
     domain= Domain.query.filter_by(id=id).first()
@@ -389,9 +476,10 @@ def get_domain_by_id(id):
 1、修改后的域名在数据库存在，且id不一致，提示域名不能重复
 2、修改后的域名在数据库存在，id一致，没问题
 3、修改后的域名在数据库不存在，没问题
+4、同一个域名可能既在网宿使用，也可能在快网使用(比如 反恐网宿在用，快网备用状态，切换时修改CNAME就行)
 '''
-def get_current_domain_id(domain):
-    check_domain_isexists = Domain.query.filter_by(domain_name=domain).first()
+def get_current_domain_id(cname,domain):
+    check_domain_isexists = Domain.query.filter_by(domain_name=domain).filter_by(cname=cname).first()
     #domain_id = check_domain_isexists.id
     try:
         #如果根据修改后的域名查不到记录
@@ -407,6 +495,7 @@ def get_current_domain_id(domain):
 修改域名信息
 '''
 @cdn_blueprint.route('/domain/modify/',methods=['POST','GET'])
+@login_required
 def modify_domain():
     #print request.form
     pid =  request.form.get('id','')
@@ -417,7 +506,7 @@ def modify_domain():
     purpose = request.form.get('purpose')
     domain = request.form.get('domain')
     project_id = request.form.get('project_id')
-    rt_status,cur_id = get_current_domain_id(domain)
+    rt_status,cur_id = get_current_domain_id(cname,domain)
     #print pid
     #print rt_status,cur_id
     if cur_id == '修改域名成功!':
@@ -448,12 +537,14 @@ def modify_domain():
     return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '修改成功'})
 
 @cdn_blueprint.route('/projectamdin/')
+@login_required
 def projectadmin():
     cur_user = get_current_user()
     projects = Project.query.all()
     return render_template('projectadmin.html',login_user=cur_user.username,projects=projects)
 
 @cdn_blueprint.route('/priceinfo/')
+@login_required
 def priceinfo():
     cur_user = get_current_user()
     prices = Charge_info.query.all()
@@ -466,6 +557,7 @@ def check_projectname(projectname):
 新建项目
 '''
 @cdn_blueprint.route('/project/add/', methods=['POST'])          #将url path=/user/add的post请求交由add_user处理
+@login_required
 def add_project():
     projectname = request.form.get('projectname', '')
        #检查用户信息
@@ -482,6 +574,7 @@ def add_project():
 修改项目
 '''
 @cdn_blueprint.route('/project/update/', methods=['POST'])          #将url path=/user/add的post请求交由add_user处理
+@login_required
 def update_project():
     projectid = request.form.get('id', '')
     #获取表单上的项目名称projectname
@@ -501,6 +594,7 @@ def update_project():
         return json.dumps({'is_ok':True, "error":'修改成功!'})
 
 @cdn_blueprint.route('/project/delete/', methods=['GET'])
+@login_required
 def delete_project():
     pid = request.args.get('id')
     pro = Project.query.filter_by(id=pid).first()
@@ -511,54 +605,17 @@ def delete_project():
     return redirect(url_for('cdn.projectadmin'))
 
 
-@cdn_blueprint.route('/post/<int:post_id>', methods=('GET', 'POST'))
-def post(post_id):
-    form = CommentForm()
-    if form.validate_on_submit():
-        new_comment = Comment()
-        new_comment.name = form.name.data
-        new_comment.text = form.text.data
-        new_comment.post_id = post_id
-        new_comment.date = datetime.datetime.now()
-
-        db.session.add(new_comment)
-        db.session.commit()
-
-    post = Post.query.get_or_404(post_id)
-    tags = post.tags
-    comments = post.comments.order_by(Comment.date.desc()).all()
-    recent, top_tags = sidebar_data()
-
-    return render_template(
-        'post.html',
-        post=post,
-        tags=tags,
-        comments=comments,
-        recent=recent,
-        top_tags=top_tags,
-        form=form
-    )
-
-@cdn_blueprint.route('/new', methods=['GET', 'POST'])
+@cdn_blueprint.route('/userinfo/')
 @login_required
-def new_post():
-    form = PostForm()
-    print current_user
-
-    if form.validate_on_submit():
-        new_post = Post(form.title.data)
-        new_post.text = form.text.data
-        new_post.publish_date = datetime.datetime.now()
-        new_post.user = User.query.filter_by(
-            username=current_user.username
-        ).one()
-
-        db.session.add(new_post)
-        db.session.commit()
-
-
-    return render_template('new.html', form=form)
-
+def userinfo():
+    cur_user = get_current_user()
+    project_list = []
+    #print cur_user.username
+    status_dic = {1:'使用中',0:'已停用'}
+    user = User.query.filter_by(username=cur_user.username).first()
+    for x in user.projects.all():
+        project_list.append(x.project_name)
+    return render_template('userinfo.html',login_user=cur_user.username,user=user,project_list=project_list,status_dic=status_dic)
 
 @cdn_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required

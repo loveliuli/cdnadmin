@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
     <link rel="icon" href="/static/temp/favicon.ico">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"-->
+	<link rel="stylesheet" href="/static/fonts/fonts.googleapis.com.icon.css">
 	<link rel="stylesheet" href="/static/assets/materialize/css/materialize.min.css" media="screen,projection" />
     <!-- Bootstrap Styles-->
     <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -17,7 +18,8 @@
     <!-- Custom Styles-->
     <link href="/static/assets/css/custom-styles.css" rel="stylesheet" />
     <!-- Google Fonts-->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <!--link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' /-->
+    <link href="/static/css/fonts.googleapis.com.css"  rel='stylesheet' type='text/css' />
     <link rel="stylesheet" href="/static/assets/js/Lightweight-Chart/cssCharts.css">
     {% block link %}{% endblock %}
     <style type="text/css">
@@ -52,7 +54,7 @@
         <!-- 个人资料下拉列表设置 -->
 
         <ul id="dropdown1" class="dropdown-content">
-            <li><a href="#"><i class="fa fa-user fa-fw"></i>个人信息</a>
+            <li><a href="{{url_for('cdn.userinfo')}}"><i class="fa fa-user fa-fw"></i>个人信息</a>
             </li>
             <li><a href="#"><i class="fa fa-gear fa-fw"></i>用户设置</a>
             </li>
@@ -87,6 +89,21 @@
                             </li>
                              <li>
                                 <a href="{{url_for('cdn.priceinfo') }}">CDN价格表</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="{% block apiisactive %}{% endblock %}"><i class="fa fa-tasks"></i>API使用说明<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="{{url_for('cdn.apiauth') }}">认证接口API</a>
+                            </li>
+                            <li>
+                                <a href="{{url_for('cdn.apiproject') }}">项目管理API</a>
+                            </li>
+                             <li>
+                                <a href="{{url_for('cdn.apidomain') }}">域名管理API</a>
                             </li>
 
                         </ul>

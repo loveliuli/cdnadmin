@@ -1,44 +1,63 @@
-{% extends "main/base.html" %}
+﻿{% extends "main/base.html" %}
 {% block title %}用户登录{% endblock %}
+{% block style %}
+  .box {margin-top:100px;}
+{% endblock %}
 {% block body %}
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <h1 class="text-center">用户登录</h1>
+
+ <div class="row">
+ <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="row-fluid login-wrapper">
+        <!--h2>CDN管理系统</h2-->
+        <div class="box">
+            <div class="content-wrap">
+            <h3 class="text-center">用户登录</h3>
             <form method="POST" action="{{ url_for('.login') }}">
                 {{ form.hidden_tag() }}
-                <div class="form-group">
-                    {{ form.username.label }}
+
+                <div class="form-group" >
+
                     {% if form.username.errors %}
                         {% for e in form.username.errors %}
                             <p class="help-block">{{ e }}</p>
                         {% endfor %}
                     {% endif %}
-                    {{ form.username(class_='form-control') }}
+                    {{ form.username(class="form-control", required=True) }}
                 </div>
+
                 <div class="form-group">
-                    {{ form.password.label }}
+
                     {% if form.password.errors %}
                         {% for e in form.password.errors %}
                             <p class="help-block">{{ e }}</p>
                         {% endfor %}
                     {% endif %}
-                    {{ form.password(class_='form-control') }}
+                    {{ form.password(class="form-control", required=True) }}
                 </div>
-                <div class="form-group">
-                    {{ form.remember.label }}
-                    {% if form.remember.errors %}
-                        {% for e in form.remember.errors %}
+
+
+                 <div class="form-group">
+                    {{ form.verification_code.label }}
+                    {% if form.verification_code.errors %}
+                        {% for e in form.verification_code.errors %}
                             <p class="help-block">{{ e }}</p>
                         {% endfor %}
                     {% endif %}
-                    {{ form.remember(class_='form-control') }}
+                    <label class="control-label"><img src="{{ url_for('main.get_code')}}"  onclick="this.src='./code?d='+Math.random();"></label>
+                    {{ form.verification_code(class="form-control", required=True) }}
                 </div>
-                <input class="btn btn-primary" type="submit" value="Login">
-            </form>
-            <hr>
 
+                <input class="btn btn-info" style="width: 100%;" type="submit" value="登录">
+            </form>
+            </div>
         </div>
-        <div class="col-md-4"></div>
+        <hr/>
+        <div class="register">
+         <a type="button" class="btn btn-info" style="width: 100%;" href="register">没有账号？注册</a>
+     </div>
     </div>
+    </div>
+    </div>
+
 {% endblock %}

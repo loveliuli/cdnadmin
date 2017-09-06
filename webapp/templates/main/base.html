@@ -6,8 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Home{% endblock %}</title>
         <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
+        <link rel="stylesheet" type='text/css' media='screen' href="{{url_for('static',filename='css/signup.css')}}">
+        <link rel="stylesheet" type='text/css' media='screen' href="{{url_for('static',filename='css/signin.css')}}">
+        <style type="text/css">
+            {% block style %}{% endblock %}
+        </style>
     </head>
-    <body>
+    <body background="static/img/bgs/landscape.jpg">
         <div class="container">
             <!--div class="jumbotron">
                 <h1><a href="{{ url_for('main.login') }}">CDN-Admin</a></h1>

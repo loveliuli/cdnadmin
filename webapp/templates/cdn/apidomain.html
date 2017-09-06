@@ -1,0 +1,206 @@
+﻿{% extends "layout.html" %}
+{% block title %}CDN管理{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block apiisactive %}active-menu waves-effect waves-dark{% endblock %}
+ {% block loginuser %}{{login_user}}{% endblock %}
+{% block content %}
+<!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+          <div class="header">
+
+          <h1 class="page-header">
+               域名管理 <small>API</small>
+          </h1>
+                <ol class="breadcrumb">
+
+                      <li><a href="{{url_for('cdn.apiproject') }}">域名管理 API</a></li>
+                      <li class="active">数据</li>
+                </ol>
+
+        </div>
+            <div id="page-inner">
+
+              <div class="row">
+
+                <div class="col-md-12">
+<p style="white-space:normal;">
+<a href="#apiget">1、Domain API GET方法使用</a><br/>
+</p>
+<p style="white-space:normal;">
+<a href="#apipost">2、Domain API POST方法使用</a><br/>
+</p>
+<p style="white-space:normal;">
+<a href="#apiput">3、DomainAPI PUT方法使用</a><br/>
+</p>
+<p style="white-space:normal;">
+<a href="#apidelete">4、Domain API DELETE方法使用</a><br/>
+</p>
+<h3 id="apiget"><strong>一、GET方法</strong></h3><br/>
+   <div><strong>1.通过id获取域名信息。</strong></div>
+   <div><strong> curl http://localhost:5000/api/domain/603</strong></div>
+   <span>
+      结果如下：
+<div>
+<pre>
+ {
+    "cname": "\u5feb\u7f51",
+    "domain_name": "jx.update.kingsoft.com",
+    "end_date": "2020-05-01T10:28:12",
+    "id": 603,
+    "purpose": "\u5feb\u7f51-HTTP\u4e0b\u8f7d\u52a0\u901f",
+    "start_date": "2013-06-27T10:28:12",
+    "status": 1
+}
+</pre>
+</div>
+</span>
+<span><strong>2.如果没有id，则默认获取第一页域名信息(每页默认10条记录)，可以指定page参数。例如：?page=2</strong></span>
+<div> <strong>curl http://localhost:5000/api/domain?page=1</strong></div>
+<div>
+<pre>
+  [
+    {
+        "cname": "\u5feb\u7f51",
+        "domain_name": "jx.update.kingsoft.com",
+        "end_date": "2020-05-01T10:28:12",
+        "id": 603,
+        "purpose": "\u5feb\u7f51-HTTP\u4e0b\u8f7d\u52a0\u901f",
+        "start_date": "2013-06-27T10:28:12",
+        "status": 1
+    },
+    {
+        "cname": "\u5feb\u7f51",
+        "domain_name": "jx1.auto.dl.kingsoft.com",
+        "end_date": "2020-05-01T10:28:12",
+        "id": 604,
+        "purpose": "\u5feb\u7f51-HTTP\u4e0b\u8f7d\u52a0\u901f",
+        "start_date": "2013-06-27T10:28:12",
+        "status": 1
+    },
+    {
+        "cname": "\u5feb\u7f51",
+        "domain_name": "jx1.client.dl.kingsoft.com",
+        "end_date": "2020-05-01T10:28:12",
+        "id": 605,
+        "purpose": "\u5feb\u7f51-HTTP\u4e0b\u8f7d\u52a0\u901f",
+        "start_date": "2013-06-27T10:28:12",
+        "status": 1
+    },
+    {
+        "cname": "\u5feb\u7f51",
+        "domain_name": "jx1.update.dl.kingsoft.com",
+        "end_date": "2020-05-01T10:28:12",
+        "id": 606,
+        "purpose": "\u5feb\u7f51-HTTP\u4e0b\u8f7d\u52a0\u901f",
+        "start_date": "2013-06-27T10:28:12",
+        "status": 1
+    },
+    {
+        "cname": "\u5feb\u7f51",
+        "domain_name": "jx3.autoupdate.kingsoft.com",
+        "end_date": "2020-05-01T10:28:12",
+        "id": 607,
+        "purpose": "\u5feb\u7f51-HTTP\u4e0b\u8f7d\u52a0\u901f",
+        "start_date": "2013-06-27T10:28:12",
+        "status": 1
+    },
+]
+</pre>
+</div>
+
+<h3 id="apipost"><strong>二、POST方法</strong></h3><br/>
+   <span><strong>新增域名信息，需要指定域名名称，这是必选项，同时token也必须带上，否则验证不能通过，无法添加域名。</strong></span>
+   <div>
+   <pre>
+   <strong>
+   curl
+   -d "domain_name=test.kingsoft.com"
+   -d "token=eyJhbGciOiJIUzI1NiIsImV4cCI6MT"
+   http://localhost:5000/api/domain
+   </strong>
+    </pre>
+    </div>
+   <span>
+      结果如下：
+<div>
+<pre>
+ 62
+</pre>
+</div>
+</span>
+
+<h3 id="apiput"><strong>二、PUT方法</strong></h3><br/>
+   <span><strong>修改域名信息，需要指定新的域名名称，这是必选项，同时token也必须带上，否则验证不能通过，无法修改域名。</strong></span>
+   <div>
+   <pre>
+   curl -X PUT
+   -d "project_name=test.kingsoft.com"
+   -d "token=eyJhbGciOiJIUzI1NiIsImV4cCI6MT"
+   http://localhost:5000/api/project/730
+    </pre>
+    </div>
+   <span>
+      结果如下：
+<div>
+<pre>
+730
+</pre>
+</div>
+</span>
+
+<h3 id="apidelete"><strong>二、DELETE方法</strong></h3><br/>
+   <span><strong>删除域名信息，需要指定域名id，这是必选项，同时token也必须带上，否则验证不能通过，无法删除域名。</strong></span>
+   <div>
+   <pre>
+   curl -X DELETE
+   -d "token=eyJhbGciOiJIUzI1NiIsImV4cCI6MT"
+   http://localhost:5000/api/domain/730/
+    </pre>
+    </div>
+   <span>
+      结果如下：
+<div>
+<pre>
+730
+</pre>
+</div>
+</span>
+
+                </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. row  -->
+            <footer><p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#"></a></p></footer>
+        </div>
+     <!-- /. page-inner  -->
+     </div>
+     <!-- /. page-wrapper  -->
+
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+
+    <!-- Bootstrap Js -->
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/materialize/js/materialize.min.js"></script>
+
+    <!-- Metis Menu Js -->
+    <script src="/static/assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+
+
+    <script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script>
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/static/assets/js/custom-scripts.js"></script>
+
+
+{% endblock %}

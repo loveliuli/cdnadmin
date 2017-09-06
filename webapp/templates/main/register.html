@@ -14,7 +14,7 @@
                             <p class="help-block">{{ e }}</p>
                         {% endfor %}
                     {% endif %}
-                    {{ form.username(class_='form-control') }}
+                    {{ form.username(class="form-control", required=True) }}
                 </div>
                 <div class="form-group">
                     {{ form.password.label }}
@@ -23,7 +23,7 @@
                             <p class="help-block">{{ e }}</p>
                         {% endfor %}
                     {% endif %}
-                    {{ form.password(class_='form-control') }}
+                    {{ form.password(class="form-control", required=True) }}
                 </div>
                 <div class="form-group">
                     {{ form.confirm.label }}
@@ -32,12 +32,38 @@
                             <p class="help-block">{{ e }}</p>
                         {% endfor %}
                     {% endif %}
-                    {{ form.confirm(class_='form-control') }}
+                    {{ form.confirm(class="form-control", required=True) }}
                 </div>
 
-                <input class="btn btn-primary" type="submit" value="Register">
+                <div class="form-group">
+                    {{ form.tel.label }}
+                    {% if form.tel.errors %}
+                        {% for e in form.tel.errors %}
+                            <p class="help-block">{{ e }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.tel(class="form-control", required=True) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {% if form.email.errors %}
+                        {% for e in form.email.errors %}
+                            <p class="help-block">{{ e }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.email(class="form-control", required=True) }}
+                </div>
+
+                <!--input class="btn btn-primary" type="submit" value="Register"   {{ form.submit(class="btn btn-info submit") }}-->
+                 <input class="btn btn-info" style="width: 100%;" type="submit" value="注册">
 
             </form>
+            <hr/>
+            <div class="register">
+                 <a type="button" class="btn btn-info" style="width: 100%;" href="login">已有账号？登录</a>
+             </div>
+
         </div>
         <div class="col-md-4"></div>
     </div>
