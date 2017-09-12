@@ -1,16 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
- {% block head %}
+{% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
     <link rel="icon" href="/static/temp/favicon.ico">
-    <!--link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"-->
-	<link rel="stylesheet" href="/static/fonts/fonts.googleapis.com.icon.css">
-	<link rel="stylesheet" href="/static/assets/materialize/css/materialize.min.css" media="screen,projection" />
     <!-- Bootstrap Styles-->
-    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FontAwesome Styles-->
     <link href="/static/assets/css/font-awesome.css" rel="stylesheet" />
     <!-- Morris Chart Styles-->
@@ -18,9 +16,7 @@
     <!-- Custom Styles-->
     <link href="/static/assets/css/custom-styles.css" rel="stylesheet" />
     <!-- Google Fonts-->
-    <!--link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' /-->
-    <link href="/static/css/fonts.googleapis.com.css"  rel='stylesheet' type='text/css' />
-    <link rel="stylesheet" href="/static/assets/js/Lightweight-Chart/cssCharts.css">
+   <link href="/static/css/fonts.googleapis.com.css"  rel='stylesheet' type='text/css' />
     {% block link %}{% endblock %}
     <style type="text/css">
         {% block style %}{% endblock %}
@@ -29,40 +25,42 @@
     {% block scripts %}{% endblock %}
 {% endblock %}
 </head>
+
 <body>
     <div id="wrapper">
-        <!-- 顶部导航栏 -->
         <nav class="navbar navbar-default top-navbar" role="navigation">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle {% block topbutton %}{% endblock %}" data-toggle="collapse" data-target=".sidebar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-        <!-- 顶部导航标题URL设置 -->
-                <a class="navbar-brand waves-effect waves-dark" href="{{url_for('cdn.home') }}"><i class="large material-icons">insert_chart</i> <strong>Admin</strong></a>
-            <!-- 顶部导航拉伸效果设置 -->
-    		<div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
+                <a class="navbar-brand" href="{{url_for('cdn.home') }}"><i class="fa fa-comments"></i> <strong>MASTER</strong></a>
+                <div id="sideNav" href=""><i class="fa fa-exchange"></i></div>
             </div>
-        <!-- 顶部导航个人资料设置 -->
+
             <ul class="nav navbar-top-links navbar-right">
-				  <li><a class="dropdown-button waves-effect waves-dark" href="#!" data-activates="dropdown1"><i class="fa fa-user fa-fw"></i> <b>{% block loginuser %}{% endblock %}</b> <i class="material-icons right">arrow_drop_down</i></a></li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-user fa-fw"></i>{% block loginuser %}{% endblock %}<i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="{{url_for('cdn.userinfo')}}"><i class="fa fa-user fa-fw"></i>个人信息</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>用户设置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{{url_for('.logout')}}"><i class="fa fa-sign-out fa-fw"></i>登出</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
             </ul>
         </nav>
-		<!-- Dropdown Structure -->
-        <!-- 个人资料下拉列表设置 -->
-
-        <ul id="dropdown1" class="dropdown-content">
-            <li><a href="{{url_for('cdn.userinfo')}}"><i class="fa fa-user fa-fw"></i>个人信息</a>
-            </li>
-            <li><a href="#"><i class="fa fa-gear fa-fw"></i>用户设置</a>
-            </li>
-            <li><a href="{{url_for('.logout')}}"><i class="fa fa-sign-out fa-fw"></i>退出</a>
-            </li>
-        </ul>
-	   <!--/. NAV TOP  -->
-       <!--  左侧导航条面板设置-->
+        <!--/. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
@@ -109,6 +107,7 @@
                         </ul>
                     </li>
 
+
                      <li>
                         <a class="{% block customisactive %}{% endblock %}" href="{{url_for('cdn.custom') }}"><i class="fa fa-fw fa-file"></i>自定义
                         </a>
@@ -119,10 +118,9 @@
 
         </nav>
 
-         {% block content %}{% endblock %}
+    </div>
 
-
-
+    {% block content %}{% endblock %}
     <!-- JS Scripts block-->
     {% block script %}{% endblock %}
 

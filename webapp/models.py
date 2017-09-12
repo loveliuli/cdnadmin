@@ -2,7 +2,7 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:27:56
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-08-22 20:18:08
+# @Last Modified time: 2017-09-06 16:32:03
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -29,6 +29,14 @@ users = db.Table(
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('project_id', db.Integer, db.ForeignKey('project.id'))
 )
+
+#用户和角色为1对多的关系，一个用户可能多个角色(admin、supper、default)
+roles = db.Table(
+    'role_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
+)
+
 
 #项目表。字段为：项目ID、项目名称、域名列表、用户列表
 class Project(db.Model):
@@ -66,10 +74,15 @@ class User(db.Model):
     status = db.Column(db.Integer())
     email = db.Column(db.String(255))
     tel = db.Column(db.String(255))
+    roles = db.relationship(
+        'Role',
+        secondary=roles,
+        backref=db.backref('users', lazy='dynamic')
+    )
 
 
-    def __init__(self,username):
-        self.username = username
+    #def __init__(self,username):
+    #    self.username = username
         #self.password = self.set_password(password)
 
     #def __repr__(self):
@@ -108,6 +121,18 @@ class User(db.Model):
 
         user = User.query.get(data['id'])
         return user
+
+class Role(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Role {0}>'.format(self.name)
+
 
 #计费信息表。计费ID、计费厂商、计费区域、简称、计费类型、计费价格
 class Charge_info(db.Model):

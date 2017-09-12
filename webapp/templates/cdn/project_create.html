@@ -1,0 +1,43 @@
+<form class="form-horizontal" id="projectcreate" action="/cdn/project/add/" method="post" accept-charset="UTF-8">
+ <div class="form-group">
+        <label class="col-md-2 control-label">项目名称:</label>
+        <div class="col-md-5">
+            <input class="form-control" type="text" name="projectname"/>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+//formatter用于显示滑块上文字的
+    jQuery(document).ready(function() {
+
+         $('#projectcreate').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        // Set default threshold for all fields. It is null by default
+        threshold: 3,
+        fields: {
+            'projectname': {
+                // The threshold option does not effect to the elements
+                // which user cannot type in, such as radio, checkbox, select, etc.
+                threshold: 5,
+                validators: {
+                    notEmpty: {
+                        message: '项目名称不能为空！'
+                    }
+                }
+            },
+        }
+    });
+});
+</script>
+
+<style>
+#ex1Slider .slider-selection {
+    background: #BABABA;
+}
+</style>

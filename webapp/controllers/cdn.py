@@ -2,7 +2,7 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:28:39
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-08-12 14:13:08
+# @Last Modified time: 2017-09-12 09:27:43
 import os,time
 from os import path
 import datetime,json
@@ -16,6 +16,8 @@ from flask import (render_template,
                    request)
 from flask_login import login_required, current_user
 from flask_principal import Permission, UserNeed
+
+from webapp.extensions import poster_permission, admin_permission
 
 from webapp.models import db,User,Project,Charge_info,Charge_statics,Domain
 from webapp.forms import CommentForm, PostForm
@@ -168,11 +170,15 @@ def logout():
 
 @cdn_blueprint.route('/custom/')
 @login_required
+@poster_permission.require(http_exception=403)
 def custom():
     cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
     #insert_traffic_data('wangsu',2017,6,download_type='http',download_domain=project_http.domain)
     #insert_domain('fastweb')
-    return render_template('custom.html',login_user=cur_user.username,price='successed!')
+        return render_template('custom.html',login_user=cur_user.username,price='successed!')
+    abort(403)
 
 @cdn_blueprint.route('/apiauth/')
 @login_required
@@ -371,14 +377,33 @@ def domainadmin():
 '''
 @cdn_blueprint.route('/domain/create/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
 @login_required
+@poster_permission.require(http_exception=403)
 def create_domain():
-    domain_status = [(0,"已停用"),(1,"使用中")]
-    cdn_names = [("网宿","网宿"),("快网","快网")]
-    projects = []
-    pros = Project.query.all()
-    for pro in pros:
-        projects.append((pro.id,pro.project_name))
-    return render_template('domain_create.html',domain_status=domain_status,projects=projects,cdn_names=cdn_names)
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        domain_status = [(0,"已停用"),(1,"使用中")]
+        cdn_names = [("网宿","网宿"),("快网","快网")]
+        projects = []
+        pros = Project.query.all()
+        for pro in pros:
+            projects.append((pro.id,pro.project_name))
+        return render_template('domain_create.html',domain_status=domain_status,projects=projects,cdn_names=cdn_names)
+    abort(403)
+
+'''
+创建项目信息
+'''
+@cdn_blueprint.route('/project/create/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
+@login_required
+@poster_permission.require(http_exception=403)
+def create_project():
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        return render_template('project_create.html')
+    abort(403)
+
 
 
 def check_domain(cname,domain):
@@ -393,31 +418,38 @@ def check_domain(cname,domain):
 '''
 @cdn_blueprint.route('/domain/add/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
 @login_required
+@poster_permission.require(http_exception=403)
 def add_domain():
-    cname = request.form.get('cdn_name','')
-    start_date = request.form.get('start_date')
-    end_date = request.form.get('end_date')
-    status = request.form.get('status_id','')
-    purpose = request.form.get('purpose')
-    domain = request.form.get('domain')
-    project_id = request.form.get('project_id')
-    _is_ok, _error = check_domain(cname,domain)
-    if not start_date:
-        start_date = datetime.datetime.now()
-    if not end_date:
-        end_date = datetime.datetime.now()
-    if _is_ok:
-        new_project = Domain()
-        new_project.cname = cname
-        new_project.start_date = start_date
-        new_project.end_date = end_date
-        new_project.status = status
-        new_project.purpose = purpose
-        new_project.domain_name = domain
-        new_project.project_id = project_id
-        db.session.add(new_project)
-        db.session.commit()
-    return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '添加成功'})
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        cname = request.form.get('cdn_name','')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        status = request.form.get('status_id','')
+        purpose = request.form.get('purpose')
+        domain = request.form.get('domain')
+        project_id = request.form.get('project_id')
+        _is_ok, _error = check_domain(cname,domain)
+        if not cname:
+            _is_ok, _error =(False,u'项目名称不能为空!')
+        if not start_date:
+            start_date = datetime.datetime.now()
+        if not end_date:
+            end_date = datetime.datetime.now()
+        if _is_ok:
+            new_project = Domain()
+            new_project.cname = cname
+            new_project.start_date = start_date
+            new_project.end_date = end_date
+            new_project.status = status
+            new_project.purpose = purpose
+            new_project.domain_name = domain
+            new_project.project_id = project_id
+            db.session.add(new_project)
+            db.session.commit()
+        return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '添加成功'})
+    abort(403)
 
 
 '''
@@ -426,28 +458,38 @@ def add_domain():
 
 @cdn_blueprint.route('/domain/delete/', methods=['GET'])
 @login_required
+@poster_permission.require(http_exception=403)
 def delete_domain():
-    pid = request.args.get('id')
-    domain = Domain.query.filter_by(id=pid).first()
-    #print domain
-    db.session.delete(domain)
-    db.session.commit()
-    flash('删除域名成功!',category='success')
-    return redirect(url_for('cdn.domainadmin'))
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        pid = request.args.get('id')
+        domain = Domain.query.filter_by(id=pid).first()
+        #print domain
+        db.session.delete(domain)
+        db.session.commit()
+        flash('删除域名成功!',category='success')
+        return redirect(url_for('cdn.domainadmin'))
+    abort(403)
 
 '''
 更新域名信息
 '''
 @cdn_blueprint.route('/domain/update/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
 @login_required
+@poster_permission.require(http_exception=403)
 def update_domain():
-    domain_status = [(0,"已停用"),(1,"使用中")]
-    cdn_names = [("网宿","网宿"),("快网","快网")]
-    projects = []
-    pros = Project.query.all()
-    for pro in pros:
-        projects.append((pro.id,pro.project_name))
-    return render_template('domain_update.html',domain_status=domain_status,projects=projects,cdn_names=cdn_names)
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        domain_status = [(0,"已停用"),(1,"使用中")]
+        cdn_names = [("网宿","网宿"),("快网","快网")]
+        projects = []
+        pros = Project.query.all()
+        for pro in pros:
+            projects.append((pro.id,pro.project_name))
+        return render_template('domain_update.html',domain_status=domain_status,projects=projects,cdn_names=cdn_names)
+    abort(403)
 
 '''
 接受前端js提交过来的id，回显整条数据信息
@@ -496,45 +538,50 @@ def get_current_domain_id(cname,domain):
 '''
 @cdn_blueprint.route('/domain/modify/',methods=['POST','GET'])
 @login_required
+@poster_permission.require(http_exception=403)
 def modify_domain():
     #print request.form
-    pid =  request.form.get('id','')
-    cname = request.form.get('cdn_name','')
-    start_date = request.form.get('start_date')
-    end_date = request.form.get('end_date')
-    status = request.form.get('status_id','')
-    purpose = request.form.get('purpose')
-    domain = request.form.get('domain')
-    project_id = request.form.get('project_id')
-    rt_status,cur_id = get_current_domain_id(cname,domain)
-    #print pid
-    #print rt_status,cur_id
-    if cur_id == '修改域名成功!':
-         _is_ok,_error = (True,u'修改域名成功!')
-    else:
-        if cur_id == int(pid):
-            _is_ok,_error =  (True,u'修改域名成功!')
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        pid =  request.form.get('id','')
+        cname = request.form.get('cdn_name','')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        status = request.form.get('status_id','')
+        purpose = request.form.get('purpose')
+        domain = request.form.get('domain')
+        project_id = request.form.get('project_id')
+        rt_status,cur_id = get_current_domain_id(cname,domain)
+        #print pid
+        #print rt_status,cur_id
+        if cur_id == '修改域名成功!':
+             _is_ok,_error = (True,u'修改域名成功!')
         else:
-            _is_ok,_error =  (False,u'域名已经存在!')
-    if not start_date:
-        start_date = datetime.datetime.now()
-    if not end_date:
-        end_date = datetime.datetime.now()
-    #print _is_ok,_error
-    if _is_ok:
-        new_project = Domain.query.filter_by(id=pid).update(
-            {
-            "cname":cname,
-            "start_date":start_date,
-            "end_date":end_date,
-            "status":status,
-            "purpose":purpose,
-            "domain_name":domain,
-            "project_id":project_id
-            }
-        )
-        db.session.commit()
-    return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '修改成功'})
+            if cur_id == int(pid):
+                _is_ok,_error =  (True,u'修改域名成功!')
+            else:
+                _is_ok,_error =  (False,u'域名已经存在!')
+        if not start_date:
+            start_date = datetime.datetime.now()
+        if not end_date:
+            end_date = datetime.datetime.now()
+        #print _is_ok,_error
+        if _is_ok:
+            new_project = Domain.query.filter_by(id=pid).update(
+                {
+                "cname":cname,
+                "start_date":start_date,
+                "end_date":end_date,
+                "status":status,
+                "purpose":purpose,
+                "domain_name":domain,
+                "project_id":project_id
+                }
+            )
+            db.session.commit()
+        return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '修改成功'})
+    abort(403)
 
 @cdn_blueprint.route('/projectamdin/')
 @login_required
@@ -550,59 +597,112 @@ def priceinfo():
     prices = Charge_info.query.all()
     return render_template('priceinfo.html',login_user=cur_user.username,prices=prices)
 
+
+'''
+接受前端js提交过来的id，回显整条数据信息
+'''
+@cdn_blueprint.route('/getprojectinfo/<id>')
+@login_required
+def get_project_by_id(id):
+    _rt = {}
+    project= Project.query.filter_by(id=id).first()
+    if project:
+        _rt['id'] = project.id
+        _rt['projectname'] = project.project_name
+        print _rt
+        return json.dumps(_rt,cls=ComplexEncoder)
+    else:
+        pass
+
 def check_projectname(projectname):
     if len(projectname)<30:
         return (True,u'添加项目成功!')
+    else:
+        return (False,u'项目名称太长!')
+
 '''
 新建项目
 '''
 @cdn_blueprint.route('/project/add/', methods=['POST'])          #将url path=/user/add的post请求交由add_user处理
 @login_required
+@poster_permission.require(http_exception=403)
 def add_project():
-    projectname = request.form.get('projectname', '')
-       #检查用户信息
-    _is_ok, _error = check_projectname(projectname)
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        projectname = request.form.get('projectname', '')
+        pro = Project.query.filter_by(project_name=projectname).all()
+        #检查用户信息
+        _is_ok, _error = check_projectname(projectname)
+        if pro:
+            _is_ok, _error = (False,'项目名称已存在！')
+        if _is_ok:
+            new_project = Project()
+            new_project.project_name = projectname
+            db.session.add(new_project)
+            db.session.commit()
+        return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '添加成功'})
+    abort(403)
 
-    if _is_ok:
-        new_project = Project()
-        new_project.project_name = projectname
-        db.session.add(new_project)
-        db.session.commit()
-    return json.dumps({'is_ok':_is_ok, "error":_error})
+
 
 '''
-修改项目
+更新域名信息
 '''
-@cdn_blueprint.route('/project/update/', methods=['POST'])          #将url path=/user/add的post请求交由add_user处理
+@cdn_blueprint.route('/project/update/',methods=['POST','GET'])                               #将url path=/users/的get请求交由users函数处理
 @login_required
+@poster_permission.require(http_exception=403)
 def update_project():
-    projectid = request.form.get('id', '')
-    #获取表单上的项目名称projectname
-    projectname = request.form.get('projectname','')
-    pro = Project.query.filter_by(id=projectid).one()
-    #从数据库查询原始项目名称new_projectname
-    new_projectname = pro.project_name
-    check_projectname_isexists = Project.query.filter_by(project_name=projectname).all()
-    #如果查询当前填入的项目名称存在数据库当中，且修改了项目名称，则提示项目名称已经存在。
-    if check_projectname_isexists and not projectname == new_projectname :
-        return json.dumps({'is_ok':False, "error":'修改的项目名已存在，操作失败!'})
-    if projectname == new_projectname:
-        return json.dumps({'is_ok':False, "error":'项目名称没有变化!'})
-    else:
-        Project.query.filter_by(id=projectid).update({'project_name':projectname})
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        return render_template('project_update.html')
+    abort(403)
+
+
+'''
+修改项
+'''
+@cdn_blueprint.route('/project/modify/', methods=['POST'])          #将url path=/user/add的post请求交由add_user处理
+@login_required
+@poster_permission.require(http_exception=403)
+def update_modify():
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        projectid = request.form.get('id', '')
+        #获取表单上的项目名称projectname
+        projectname = request.form.get('projectname','')
+        pro = Project.query.filter_by(id=projectid).one()
+        #从数据库查询原始项目名称new_projectname
+        new_projectname = pro.project_name
+        check_projectname_isexists = Project.query.filter_by(project_name=projectname).all()
+        #如果查询当前填入的项目名称存在数据库当中，且修改了项目名称，则提示项目名称已经存在。
+        if check_projectname_isexists and not projectname == new_projectname :
+            return json.dumps({'is_ok':False, "errors":'修改的项目名已存在，操作失败!','success' : '修改失败'})
+        if projectname == new_projectname:
+            return json.dumps({'is_ok':False, "errors":'项目名称没有变化!','success' : '修改失败'})
+        else:
+            Project.query.filter_by(id=projectid).update({'project_name':projectname})
         db.session.commit()
-        return json.dumps({'is_ok':True, "error":'修改成功!'})
+        return json.dumps({'is_ok':True, "errors":'修改成功','success' : '修改成功'})
+    abort(403)
 
 @cdn_blueprint.route('/project/delete/', methods=['GET'])
 @login_required
+@poster_permission.require(http_exception=403)
 def delete_project():
-    pid = request.args.get('id')
-    pro = Project.query.filter_by(id=pid).first()
-    #print pro
-    db.session.delete(pro)
-    db.session.commit()
-    flash('删除项目成功!',category='success')
-    return redirect(url_for('cdn.projectadmin'))
+    cur_user = get_current_user()
+    permission = Permission(UserNeed(cur_user.id))
+    if permission.can() or admin_permission.can():
+        pid = request.args.get('id')
+        pro = Project.query.filter_by(id=pid).first()
+        #print pro
+        db.session.delete(pro)
+        db.session.commit()
+        flash('删除项目成功!',category='success')
+        return redirect(url_for('cdn.projectadmin'))
+    abort(403)
 
 
 @cdn_blueprint.route('/userinfo/')
@@ -617,32 +717,5 @@ def userinfo():
         project_list.append(x.project_name)
     return render_template('userinfo.html',login_user=cur_user.username,user=user,project_list=project_list,status_dic=status_dic)
 
-@cdn_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_post(id):
-    post = Post.query.get_or_404(id)
-
-    permission = Permission(UserNeed(post.user.id))
-    print permission.can()
-
-    # We want admins to be able to edit any post
-    if permission.can() or admin_permission.can():
-        form = PostForm()
-
-        if form.validate_on_submit():
-            post.title = form.title.data
-            post.text = form.text.data
-            post.publish_date = datetime.datetime.now()
-
-            db.session.add(post)
-            db.session.commit()
-
-            return redirect(url_for('.post', post_id=post.id))
-
-        form.text.data = post.text
-
-        return render_template('edit.html', form=form, post=post)
-
-    abort(403)
 if __name__ == '__main__':
     print get_price()

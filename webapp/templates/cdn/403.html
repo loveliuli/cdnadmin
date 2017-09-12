@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+﻿{% extends "layout.html" %}
 {% block title %}CDN管理{% endblock %}
 {% block head %}
   {{ super() }}
@@ -13,11 +13,6 @@
           <h1 class="page-header">
                自定义页面 <small>新页面</small>
           </h1>
-                <ol class="breadcrumb">
-
-                      <li><a href="{{url_for('cdn.custom') }}">自定义</a></li>
-                      <li class="active">数据</li>
-                </ol>
 
         </div>
             <div id="page-inner">
@@ -26,7 +21,7 @@
 
                 <div class="col-md-12">
 
-                     <a href=https://sojump.com/jq/16409952.aspx>调查问卷</a>
+                     <h1>Forrbden！您无权查看此页面，如有需要，请联系管理员！</h1>
                 </div>
              <!-- /. PAGE INNER  -->
             </div>
@@ -37,9 +32,14 @@
      </div>
      <!-- /. page-wrapper  -->
 
-  <script src="/static/assets/js/jquery-1.10.2.js"></script>
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+
     <!-- Bootstrap Js -->
     <script src="/static/assets/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/materialize/js/materialize.min.js"></script>
 
     <!-- Metis Menu Js -->
     <script src="/static/assets/js/jquery.metisMenu.js"></script>
@@ -48,10 +48,13 @@
     <script src="/static/assets/js/morris/morris.js"></script>
 
 
-  <script src="/static/assets/js/easypiechart.js"></script>
-  <script src="/static/assets/js/easypiechart-data.js"></script>
+    <script src="/static/assets/js/easypiechart.js"></script>
+    <script src="/static/assets/js/easypiechart-data.js"></script>
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
 
     <!-- Custom Js -->
     <script src="/static/assets/js/custom-scripts.js"></script>
+
 
 {% endblock %}

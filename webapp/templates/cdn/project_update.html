@@ -1,0 +1,41 @@
+<form class="form-horizontal" id="projectupdate" action="/cdn/project/modify/" method="post" accept-charset="UTF-8">
+<input type="hidden" name="id" id="id"/>
+ <div class="form-group">
+        <label class="col-md-2 control-label">项目名称:</label>
+        <div class="col-md-5">
+            <input class="form-control" type="text" id="projectname" name="projectname"/>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+//formatter用于显示滑块上文字的
+    jQuery(document).ready(function() {
+
+         $('#projectupdate').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        // Set default threshold for all fields. It is null by default
+        threshold: 3,
+        fields: {
+            'projectname': {
+                threshold: 6,
+                validators: {
+                    notEmpty: {
+                        message: '项目名称不能为空！'
+                    }
+                }
+            },
+        }
+    });
+});
+</script>
+<style>
+#ex1Slider .slider-selection {
+    background: #BABABA;
+}
+</style>

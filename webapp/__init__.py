@@ -7,17 +7,18 @@ from flask import Flask
 from webapp.models import db
 from controllers.cdn import cdn_blueprint
 from controllers.main import main_blueprint
-from webapp.extensions import bcrypt,login_manager,admin,rest_api
+from webapp.extensions import bcrypt,login_manager,admin,rest_api,principals
 from webapp.controllers.rest.post import DomainApi,ProjectApi,UserApi
 from webapp.controllers.rest.auth import AuthApi
-from webapp.models import User,Project,Domain,Charge_info,Charge_statics
+from webapp.models import User,Project,Domain,Charge_info,Charge_statics,Role
 from webapp.controllers.admin import (
         CustomView,
         CustomModelView,
         CustomFileAdmin
 
     )
-
+from flask_login import current_user
+from flask_principal import identity_loaded, UserNeed, RoleNeed
 
 def datetimeformat(value, format="%Y-%m"):
     return value.strftime(format)
@@ -30,10 +31,31 @@ def create_app(object_name):
     bcrypt.init_app(app)
     admin.init_app(app)
     login_manager.init_app(app)
+    principals.init_app(app)
+
+
+    @identity_loaded.connect_via(app)
+    def on_identity_loaded(sender, identity):
+        # Set the identity user object
+        identity.user = current_user
+        print "In __init_.py......:%s" %current_user
+
+        # Add the UserNeed to the identity
+        if hasattr(current_user, 'id'):
+            identity.provides.add(UserNeed(current_user.id))
+            print UserNeed(current_user.id)
+
+        # Add each role to the identity
+        if hasattr(current_user, 'roles'):
+            for role in current_user.roles:
+                identity.provides.add(RoleNeed(role.name))
+                print RoleNeed(role.name)
+
+
 
     admin.add_view(CustomView(name='Custom'))
 
-    models = [User,Project,Domain,Charge_info,Charge_statics]
+    models = [User,Project,Domain,Charge_info,Charge_statics,Role]
     for model in models:
         admin.add_view(
             CustomModelView(

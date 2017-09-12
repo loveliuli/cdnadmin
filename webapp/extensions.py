@@ -2,12 +2,23 @@
 # @Author: liuli
 # @Date:   2017-03-18 22:39:53
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-08-08 21:28:45
+# @Last Modified time: 2017-09-06 10:31:52
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_restful import Api
+from flask_principal import Principal, Permission, RoleNeed
 
+
+bcrypt = Bcrypt()
+admin = Admin()
+rest_api = Api()
+principals = Principal()
+
+
+admin_permission = Permission(RoleNeed('admin'))
+poster_permission = Permission(RoleNeed('poster'))
+default_permission = Permission(RoleNeed('default'))
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
@@ -15,9 +26,7 @@ login_manager.session_protection = "strong"
 login_manager.login_message = "Please login to access this page"
 login_manager.login_message_category = "info"
 
-bcrypt = Bcrypt()
-admin = Admin()
-rest_api = Api()
+
 
 @login_manager.user_loader
 def load_user(userid):
@@ -41,6 +50,6 @@ def create_or_login(resp):
         db.session.commit()
 
     session['username'] = username
-    return redirect(url_for('blog.home'))
+    return redirect(url_for('cdn.home'))
 
 

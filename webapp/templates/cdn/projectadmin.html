@@ -1,5 +1,18 @@
 {% extends "layout.html" %}
 {% block title %}项目管理{% endblock %}
+ {% block link %}
+ <link rel="stylesheet" href="{{url_for('static',filename='bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}"  type="text/css" />
+ <link rel="stylesheet" href="{{url_for('static',filename='bootstrap-validator/css/bootstrapValidator.min.css')}}"  type="text/css" />
+<link rel="stylesheet" href="{{url_for('static',filename='sweet-alert-js/css/sweet-alert.css')}}"  type="text/css" />
+ {% endblock %}
+ <style type="text/css">
+        {% block style %}
+.modal-backdrop {
+  opacity: 0 !important;
+  filter: alpha(opacity=0) !important;
+}
+        {% endblock %}
+    </style>
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -21,7 +34,7 @@
           <!--   project card -->
             <div class="card">
                 <div class="card-action">
-                <button type="button" style="height:20px" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#create-project">新增项目</button>
+                <button type="button" style="height:20px" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#dialog" data-title="添加项目" data-btn-txt="添加" data-url="/cdn/project/create/">添加项目</button>
                 {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
                 {% for category, message in messages %}
@@ -50,7 +63,7 @@
                                     <td >{{pro['id']}}</td>
                                     <td >{{pro['project_name']}}</td>
                                     <td >
-                            <button type="button"  class="btn btn-primary btn-xs" style="height:20px" data-toggle="modal" data-target="#update-project" data-projectid="{{pro['id']}}" data-projectname="{{pro['project_name']}}" >修改</button>
+                            <button type="button"  class="btn btn-primary btn-xs" style="height:20px" data-toggle="modal" data-target="#dialog"  data-btn-txt="修改" data-title="更新项目"  data-url="/cdn/project/update/" data-id="{{pro['id']}}"  >修改</button>
                                     </td>
                                      <td >
                             <a class="btn btn-primary btn-xs btn-danger"  style="height:20px"  href="/cdn/project/delete/?id={{pro['id']}}" onclick="return confirm('确定删除吗?');">删除</a>
@@ -71,137 +84,207 @@
      <!-- /.End  page-inner  -->
 </div>
 
-<!--添加用户框-->
-<div class="modal fade" id="create-project" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <!--div class="modal-dialog" role="document"-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel">添加项目</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="create-project-projectname" class="control-label">项目名称</label>
-            <input type="text" class="form-control" id="create-project-projectname">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="create-commit">添加</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- dialog部分，用于弹出dialog的 data-backdrop="static"设定点击是不消失-->
+       <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="padding-right:0px!important;width:600px;margin: 0px auto" >
+         <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">修改用户</h4>
+            </div>
+            <div class="modal-body">
+               您无权进行此操作，请联系管理员！
+         <!--弹出框表单部分 id,sn,ip,hostname,idc_id,purchase_date,warranty,vendor,model,admin,business,cpu,ram,disk,os,status'-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary " data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary  btn-form-submit">更新</button>
+            </div>
+        </div>
+      </div> <!--dialog-->
 
-<!--添加用户框-->
-<div class="modal fade" id="update-project" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <!--div class="modal-dialog" role="document"-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel">更新项目</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-          <input type="hidden" id="update-project-projectid"/>
-          <div class="form-group">
-            <label for="update-project-projectname" class="control-label">项目名称</label>
-            <input type="text" class="form-control" id="update-project-projectname">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="update-commit">修改</button>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- /. End page-wrapper  -->
 
     <!-- JS Scripts-->
     <!-- jQuery Js -->
-    <script src="/static/assets/js/jquery-1.12.4.js"></script>
+   <!-- JS Scripts-->
+    <!-- jQuery Js -->
+   <script src="/static/assets/js/jquery-1.10.2.js"></script>
 
     <!-- Bootstrap Js -->
     <script src="/static/assets/js/bootstrap.min.js"></script>
+
     <script src="/static/assets/materialize/js/materialize.min.js"></script>
+
     <!-- Metis Menu Js -->
     <script src="/static/assets/js/jquery.metisMenu.js"></script>
     <!-- Morris Chart Js -->
     <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
     <script src="/static/assets/js/morris/morris.js"></script>
+
+
     <script src="/static/assets/js/easypiechart.js"></script>
     <script src="/static/assets/js/easypiechart-data.js"></script>
-    <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+     <script src="/static/assets/js/Lightweight-Chart/jquery.chart.js"></script>
          <!-- DATA TABLE SCRIPTS -->
     <script src="/static/assets/js/dataTables/jquery.dataTables.js"></script>
     <script src="/static/assets/js/dataTables/dataTables.bootstrap.js"></script>
-
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js') }}"></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-validator/js/bootstrapValidator.min.js') }}"></script>
     <!-- Custom Js -->
     <script src="/static/assets/js/custom-scripts.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='sweet-alert-js/js/sweet-alert.min.js') }}"></script>
 {% endblock %}
 
 {% block js %}
+
+<!-- 表单表格插件 -->
  $(document).ready(function () {
-                $('#dataTables-example').dataTable();
-            });
 
-jQuery(document).ready(function() {
+    $('#dataTables-example').dataTable();
+     var timer_interval = null;
 
-    jQuery('#create-project').on('show.bs.modal', function (event) {
-        jQuery('#create-project-projectname').val('');
-    });
+<!-- 展示dialog，并获取dialog上的变量，并赋值给modal的对应位置 -->
+    $('#dialog').on('show.bs.modal', function (event) {
 
-    jQuery('#create-commit').on('click', function(){
-        var params = {};
-        params['projectname'] = jQuery('#create-project-projectname').val();
-        jQuery.post('/cdn/project/add/',
-            params,
-            function(data) {
-              if(data['is_ok']){
-                alert('创建成功');
-                //jQuery('#create-project').modal('hide');
-                //window.location.replace('/projectadmin/');
-                window.location.reload();
+      if(!event.relatedTarget) {return;}
+        var button = $(event.relatedTarget);
+        var title = button.data('title');
+        var btn_txt = button.data('btn-txt');
+        var url = button.data('url');
+        console.log(url);
+        console.log(title);
+
+        var that = this;
+        $(that).find('.modal-title').text(title);
+        $(that).find('.btn-form-submit').text(btn_txt);
+
+        $(that).find('.modal-body').load(url);
+
+<!-- 更新项目，先根据projectid获取项目信息，然后通过ajax获取信息后显示项目的相关信息在modal -->
+    if(title=='更新项目') {
+        var projectid = button.data('id');
+         console.log(projectid);
+        jQuery.get('/cdn/getprojectinfo/'+projectid, function(data) {
+          if(data.id){
+              $('#id').val(data.id);
+              $('#projectname').val(data.projectname);
               } else {
-                alert(data['error']);
+                alert("数据不存在");
               }
-            },
-            'json'
-        );
+        }, 'json')
+        //否则就是添加域名，什么也不需要做。
+        } else   {
+         return;
+        }
+
     });
 
- jQuery('#update-project').on('show.bs.modal', function (event) {
+<!-- 修改项目信息后，通过点击 提交 按钮触发事件。 -->
+    jQuery('.btn-form-submit').on('click', function() {
+      var _form = jQuery('#dialog').find('form');
+      var bootstrapValidator = $(_form).data('bootstrapValidator');
+      if (bootstrapValidator) {
+          bootstrapValidator.validate();
+          if (!bootstrapValidator.isValid()) {return;}
+      }
 
-        var button = jQuery(event.relatedTarget);
-        jQuery('#update-project-projectid').val(button.data('projectid'));
-        jQuery('#update-project-projectname').val(button.data('projectname'));
+      console.log(_form.attr('action'));
+
+<!-- 如果是添加项目，则通过ajax进行对应url的数据提交，通过返回的数据进行判断，并根据结果判断修改成功与否。 -->
+    if(_form.attr('action')=="/cdn/project/add/") {
+        jQuery.post(_form.attr('action'), _form.serializeArray(), function(result) {
+            if(result['is_ok']) {
+                if(result['success']) {
+                    //alert(result['success']);
+                    swal({
+                        title: result['success'],
+                        text: '',
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "关闭",
+                        closeOnConfirm: true,
+                        closeOnCancel: false
+                        },
+                        function(isConfirm){
+                            window.location.reload();
+                    });
+                }
+            } else {
+                var errors = [];
+                for(var key in result['errors']) {
+                    errors.push(result['errors'][key]);
+                }
+                //alert(errors.join('\n'));
+                swal({
+                        title: "添加失败!",
+                        text: errors.join(''),
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "关闭",
+                        closeOnConfirm: true,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm){
+                    }
+                );
+            }
+        }, 'json')
+
+
+<!-- 如果是修改项目，则通过ajax进行对应url的数据提交，通过返回的数据进行判断，并根据结果判断修改成功与否。 -->
+  } else  if(_form.attr('action')=="/cdn/project/modify/"){
+         jQuery.post(_form.attr('action'), _form.serializeArray(), function(result) {
+            if(result['is_ok']) {
+                if(result['success']) {
+                    //alert(result['success']);
+                    swal({
+                        title: result['success'],
+                        text: '',
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "关闭",
+                        closeOnConfirm: true,
+                        closeOnCancel: false
+                        },
+                        function(isConfirm){
+                            window.location.reload();
+                    });
+                }
+            } else {
+                var errors = [];
+                for(var key in result['errors']) {
+                    errors.push(result['errors'][key]);
+                }
+                //alert(errors.join('\n'));
+                swal({
+                        title: "修改失败!",
+                        text: errors.join(''),
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "关闭",
+                        closeOnConfirm: true,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm){
+                       return;
+                    }
+                );
+            }
+        }, 'json')
+        }
+
     });
 
-    jQuery('#update-commit').on('click', function(){
-        var params = {};
-        params['id'] = jQuery('#update-project-projectid').val();
-        params['projectname'] = jQuery('#update-project-projectname').val();
 
-        jQuery.post('/cdn/project/update/',
-            params,
-            function(data) {
-              if(data['is_ok']){
-                alert('修改成功');
-                //jQuery('#update-user').modal('hide');
-                //window.location.replace('/users/');
-                window.location.reload();
-              } else {
-                alert(data['error']);
-              }
-            },
-            'json'
-        );
-    });
-
-
-});
+      });
 {% endblock %}
