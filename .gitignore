@@ -1,3 +1,7 @@
 *.pyc
 *.xml
 *utils*
+*backup*
+.zip
+.gz
+.tar
