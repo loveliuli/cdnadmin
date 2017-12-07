@@ -1,9 +1,9 @@
 <form class="form-horizontal" id="domainupdate" action="/cdn/domain/modify/" method="post" accept-charset="UTF-8">
-<input type="hidden" name="id" id="id"/>
+<input type="hidden" name="id" value={{domain['id']}}>
  <div class="form-group">
         <label class="col-md-2 control-label">域名:</label>
         <div class="col-md-5">
-            <input class="form-control" type="text" id="domain" name="domain"/>
+            <input class="form-control" type="text" value={{domain['domain_name']}} name="domain"/>
         </div>
     </div>
     <div class="form-group">
@@ -11,7 +11,11 @@
          <div class="col-md-5">
             <select name="cdn_name" id="cdn_name" class="form-control">
                 {% for _id, _value in cdn_names %}
-                    <option value="{{_id}}">{{_value}}</option>
+                    <option value="{{_value}}"
+                        {% if _value == domain['cname']|string %}
+                           selected="selected"
+                        {% endif %}
+                    >{{_value}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -20,13 +24,13 @@
         <label class="col-md-2 control-label">开始日期:</label>
         <div class="col-md-5">
 
-            <input class="form-control" type="text" id="start_date" name="start_date"/>
+            <input class="form-control" id="start_date" type="text" value={{domain["start_date"]}} name="start_date"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-2 control-label">结束日期:</label>
         <div class="col-md-5">
-            <input class="form-control" type="text" id="end_date" name="end_date"/>
+            <input class="form-control" id="end_date" type="text" value={{domain["end_date"]}} name="end_date"/>
         </div>
     </div>
     <div class="form-group">
@@ -34,7 +38,11 @@
         <div class="col-md-5">
             <select name="status_id" id="status_id" class="form-control">
                 {% for _id, _value in domain_status %}
-                    <option value="{{_id}}">{{_value}}</option>
+                    <option value="{{_id}}"
+                        {% if _id == domain['status']|int %}
+                           selected="selected"
+                        {% endif %}
+                    >{{_value}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -45,7 +53,11 @@
         <div class="col-md-5">
             <select name="project_id" id="project_id" class="form-control">
                 {% for _id, _value in projects %}
-                    <option value="{{_id}}">{{_value}}</option>
+                    <option value="{{_id}}"
+                       {% if _id == domain['project_id']|int %}
+                           selected="selected"
+                        {% endif %}
+                    >{{_value}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -53,7 +65,7 @@
     <div class="form-group">
         <label class="col-md-2 control-label">用途:</label>
         <div class="col-md-5">
-            <input class="form-control" type="text" id="purpose" name="purpose"/>
+            <input class="form-control" type="text" value={{domain["purpose"]}} name="purpose"/>
         </div>
 </form>
 

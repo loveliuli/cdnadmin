@@ -42,6 +42,7 @@ roles = db.Table(
 class Project(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     project_name = db.Column(db.String(255))
+    remark = db.Column(db.String(255))
     domains = db.relationship('Domain', backref='project', lazy='dynamic')
     users = db.relationship(
         'User',
@@ -81,8 +82,8 @@ class User(db.Model):
     )
 
 
-    #def __init__(self,username):
-    #    self.username = username
+    def __init__(self,username):
+        self.username = username
         #self.password = self.set_password(password)
 
     #def __repr__(self):
@@ -166,7 +167,7 @@ class Charge_statics(db.Model):
 
     @staticmethod
     def get_charge_statics(charge_date,charge_cname):
-        project_client_wangsu = ['剑一','剑二','剑三','剑世','月影','猎魔','春秋','封神一','反恐行动','蜂鸟','麻辣江湖']
+        project_client_wangsu = ['剑一','剑二','剑三','剑世','月影','猎魔','春秋','封神一','反恐行动','自由禁区','麻辣江湖']
         project_client_fastweb = ['剑一','剑三','剑世','月影','反恐行动']
 
         project_legend_wangsu = []

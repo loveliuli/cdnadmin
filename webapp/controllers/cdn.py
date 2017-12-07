@@ -2,10 +2,12 @@
 # @Author: liuli
 # @Date:   2017-03-15 23:28:39
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-09-12 09:27:43
+# @Last Modified time: 2017-10-31 12:01:06
 import os,time
 from os import path
 import datetime,json
+import csv
+from StringIO import StringIO
 from sqlalchemy import func
 from flask import (render_template,
                    Blueprint,
@@ -63,6 +65,7 @@ def insert_traffic_data(cname,year,month,download_type=None,download_domain=None
         _rt_statics = wangsustatics.get_traffic_result(myflag=download_type,mydomain=project_http.domain,year=year,month=month)
     elif  cname == 'wangsu' and download_type=='https':
         _rt_statics = wangsustatics.get_traffic_result(myflag=download_type,mydomain=project_https.domain,year=year,month=month)
+
     for val in _rt_statics:
         new_comment = Charge_statics()
         new_comment.charge_date = datetime.datetime.now().strptime(val[0],"%Y-%m")
@@ -158,9 +161,15 @@ def get_current_user():
 @login_required
 def home():
     cur_user = get_current_user()
+    year = datetime.date.today().year
+    month = datetime.date.today().month-1
+    charge_date = '%s-%s-01 00:00:00' %(year,month)
+    print charge_date
     distinct_cname_list = db.session.query(func.distinct(Charge_statics.charge_cname)).all()
-    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).group_by(Charge_statics.charge_project).all()
-    fa_list = ["fa fa-eye fa-5x","fa fa-shopping-cart fa-5x","fa fa-comments fa-5x","fa fa-users fa-5x","fa fa-bug fa-5x","fa fa-calendar fa-5x","fa fa-cloud-upload fa-5x","fa fa-cloud-download fa-5x"]
+    #修改成只显示当月的数据-2017-10-31修改
+    #charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).group_by(Charge_statics.charge_project).all()
+    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).filter_by(charge_date=charge_date).group_by(Charge_statics.charge_project).all()
+    fa_list = ["fa fa-eye fa-2x","fa fa-shopping-cart fa-2x","fa fa-comments fa-2x","fa fa-users fa-2x","fa fa-bug fa-2x","fa fa-calendar fa-2x","fa fa-cloud-upload fa-2x","fa fa-cloud-download fa-2x"]
     fa_color = ["card-image red","card-image orange","card-image blue","card-image"]
     return render_template('dashboardtype.html',login_user=cur_user.username,charge_statics=charge_statics,fa_list=fa_list,fa_color=fa_color)
 
@@ -170,15 +179,14 @@ def logout():
 
 @cdn_blueprint.route('/custom/')
 @login_required
-@poster_permission.require(http_exception=403)
 def custom():
     cur_user = get_current_user()
     permission = Permission(UserNeed(cur_user.id))
-    if permission.can() or admin_permission.can():
-    #insert_traffic_data('wangsu',2017,6,download_type='http',download_domain=project_http.domain)
+    #insert_traffic_data('wangsu',2017,11,download_type='http',download_domain=project_http.domain)
+    #insert_traffic_data('wangsu',2017,11,download_type='https',download_domain=project_https.domain)
+    #insert_traffic_data('fastweb',2017,11,download_type='http')
     #insert_domain('fastweb')
-        return render_template('custom.html',login_user=cur_user.username,price='successed!')
-    abort(403)
+    return render_template('custom.html',login_user=cur_user.username,price='successed!')
 
 @cdn_blueprint.route('/apiauth/')
 @login_required
@@ -224,9 +232,13 @@ def dashboard():
 def dashboardshowtype(gametype):
     cur_user = get_current_user()
     client_game = ['剑一','剑二','封神一','剑三','剑世','月影','反恐行动','猎魔','蜂鸟','春秋','麻辣江湖','封神三','格斗灌篮王']
-    other = ['数据中心','tako','公共']
+    other = ['数据中心','tako','I项目公共']
     distinct_cname_list = db.session.query(func.distinct(Charge_statics.charge_cname)).all()
-    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).group_by(Charge_statics.charge_project).all()
+    year = datetime.date.today().year
+    month = datetime.date.today().month-1
+    charge_date = '%s-%s-01 00:00:00' %(year,month)
+    #charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).group_by(Charge_statics.charge_project).all()
+    charge_statics = db.session.query(Charge_statics.charge_date.label('charge_date'),Charge_statics.charge_project.label('charge_project'),func.sum(Charge_statics.charge_total)).filter_by(charge_date=charge_date).group_by(Charge_statics.charge_project).all()
     charge_statics_client_game = []
     charge_statics_phone_game = []
     charge_statics_other_game = []
@@ -238,7 +250,7 @@ def dashboardshowtype(gametype):
         else:
             charge_statics_phone_game.append(item)
     #print charge_statics_phone_game,charge_statics_client_game
-    fa_list = ["fa fa-eye fa-5x","fa fa-shopping-cart fa-5x","fa fa-comments fa-5x","fa fa-users fa-5x","fa fa-bug fa-5x","fa fa-calendar fa-5x","fa fa-cloud-upload fa-5x","fa fa-cloud-download fa-5x"]
+    fa_list = ["fa fa-eye fa-2x","fa fa-shopping-cart fa-2x","fa fa-comments fa-2x","fa fa-users fa-2x","fa fa-bug fa-2x","fa fa-calendar fa-2x","fa fa-cloud-upload fa-2x","fa fa-cloud-download fa-2x"]
     fa_color = ["card-image red","card-image orange","card-image blue","card-image"]
     if gametype == 'client':
         return render_template('dashboardtype.html',login_user=cur_user.username,charge_statics=charge_statics_client_game,fa_list=fa_list,fa_color=fa_color)
@@ -360,6 +372,8 @@ def tablestatics():
         rt_total['name']=z.charge_area
         rt_result.append(rt_total)
     #print rt_area,rt_result
+    #rt_area格式：['中国','美国']
+    #rt_result格式：[{'name':'中国','value':10},{'name':'美国','value':20}]
     return render_template('tablestatics.html',login_user=cur_user.username,rt_area=json.dumps(rt_area),rt_result=json.dumps(rt_result),rt_cname=mycname,rt_project=project,rt_date=mydate,rt_domains=domain_list)
 
 @cdn_blueprint.route('/domainadmin/')
@@ -383,7 +397,7 @@ def create_domain():
     permission = Permission(UserNeed(cur_user.id))
     if permission.can() or admin_permission.can():
         domain_status = [(0,"已停用"),(1,"使用中")]
-        cdn_names = [("网宿","网宿"),("快网","快网")]
+        cdn_names = [("网宿","网宿"),("快网","快网"),('七牛云','七牛云'),('金山云','金山云')]
         projects = []
         pros = Project.query.all()
         for pro in pros:
@@ -480,16 +494,17 @@ def delete_domain():
 @poster_permission.require(http_exception=403)
 def update_domain():
     cur_user = get_current_user()
-    permission = Permission(UserNeed(cur_user.id))
-    if permission.can() or admin_permission.can():
-        domain_status = [(0,"已停用"),(1,"使用中")]
-        cdn_names = [("网宿","网宿"),("快网","快网")]
-        projects = []
-        pros = Project.query.all()
-        for pro in pros:
-            projects.append((pro.id,pro.project_name))
-        return render_template('domain_update.html',domain_status=domain_status,projects=projects,cdn_names=cdn_names)
-    abort(403)
+    domainid = request.args.get('id','')
+    domain= Domain.query.filter_by(id=domainid).first()
+
+    domain_status = [(0,"已停用"),(1,"使用中")]
+    cdn_names = [(0,"网宿"),(1,"快网")]
+    projects = []
+    pros = Project.query.all()
+    for pro in pros:
+        projects.append((pro.id,pro.project_name))
+    return render_template('domain_update.html',domain=domain,domain_status=domain_status,cdn_names=cdn_names,projects=projects)
+
 
 '''
 接受前端js提交过来的id，回显整条数据信息
@@ -553,6 +568,7 @@ def modify_domain():
         domain = request.form.get('domain')
         project_id = request.form.get('project_id')
         rt_status,cur_id = get_current_domain_id(cname,domain)
+        print pid
         #print pid
         #print rt_status,cur_id
         if cur_id == '修改域名成功!':
@@ -599,6 +615,29 @@ def priceinfo():
 
 
 '''
+下载域名信息，csv格式
+'''
+@cdn_blueprint.route('/domain/download/')
+@login_required
+def domain_load():
+    domains = Domain.query.all()
+    s=StringIO()
+    headers = '域名,开通日期,结束日期,用途'.split(',')
+    csv_writer = csv.writer(s)
+    csv_writer.writerow(headers)
+    for domain in domains:
+        _tmplist=[]
+        _tmplist.append(domain.domain_name)
+        _tmplist.append(domain.start_date)
+        _tmplist.append(domain.end_date)
+        _tmplist.append(domain.purpose)
+        csv_writer.writerow(_tmplist)
+    cxt = s.getvalue()
+    s.close()
+    return cxt,200,{'Content-Type':'text/csv;charset=utf-8',"Content-Disposition":"attachment;filename=domains.csv"}
+
+
+'''
 接受前端js提交过来的id，回显整条数据信息
 '''
 @cdn_blueprint.route('/getprojectinfo/<id>')
@@ -631,6 +670,7 @@ def add_project():
     permission = Permission(UserNeed(cur_user.id))
     if permission.can() or admin_permission.can():
         projectname = request.form.get('projectname', '')
+        remark = request.form.get('remark', '')
         pro = Project.query.filter_by(project_name=projectname).all()
         #检查用户信息
         _is_ok, _error = check_projectname(projectname)
@@ -639,6 +679,7 @@ def add_project():
         if _is_ok:
             new_project = Project()
             new_project.project_name = projectname
+            new_project.remark = remark
             db.session.add(new_project)
             db.session.commit()
         return json.dumps({'is_ok' : _is_ok, 'errors' : _error, 'success' : '添加成功'})
@@ -655,8 +696,10 @@ def add_project():
 def update_project():
     cur_user = get_current_user()
     permission = Permission(UserNeed(cur_user.id))
+    projectid = request.args.get('id','')
+    project = Project.query.filter_by(id=projectid).first()
     if permission.can() or admin_permission.can():
-        return render_template('project_update.html')
+        return render_template('project_update.html',project=project)
     abort(403)
 
 
@@ -673,6 +716,7 @@ def update_modify():
         projectid = request.form.get('id', '')
         #获取表单上的项目名称projectname
         projectname = request.form.get('projectname','')
+        remark = request.form.get('remark','')
         pro = Project.query.filter_by(id=projectid).one()
         #从数据库查询原始项目名称new_projectname
         new_projectname = pro.project_name
@@ -680,10 +724,8 @@ def update_modify():
         #如果查询当前填入的项目名称存在数据库当中，且修改了项目名称，则提示项目名称已经存在。
         if check_projectname_isexists and not projectname == new_projectname :
             return json.dumps({'is_ok':False, "errors":'修改的项目名已存在，操作失败!','success' : '修改失败'})
-        if projectname == new_projectname:
-            return json.dumps({'is_ok':False, "errors":'项目名称没有变化!','success' : '修改失败'})
-        else:
-            Project.query.filter_by(id=projectid).update({'project_name':projectname})
+
+        Project.query.filter_by(id=projectid).update({'project_name':projectname,'remark':remark})
         db.session.commit()
         return json.dumps({'is_ok':True, "errors":'修改成功','success' : '修改成功'})
     abort(403)

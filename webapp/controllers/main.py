@@ -2,7 +2,7 @@
 # @Author: XUEQUN
 # @Date:   2017-03-17 11:16:27
 # @Last Modified by:   XUEQUN
-# @Last Modified time: 2017-08-29 21:29:10
+# @Last Modified time: 2017-09-28 10:10:40
 
 from flask import (render_template,
                    current_app,
@@ -23,7 +23,7 @@ from os import path
 from webapp.models import User,db
 from flask_login import login_user, logout_user
 import random
-import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import StringIO
 import string,random
 
@@ -99,6 +99,7 @@ def create_validate_code(size=(120, 30),
     strs = create_strs()
 
     # 图形扭曲参数
+    """
     params = [1 - float(random.randint(1, 2)) / 100,
               0,
               0,
@@ -109,10 +110,18 @@ def create_validate_code(size=(120, 30),
               float(random.randint(1, 2)) / 500
               ]
     img = img.transform(size, Image.PERSPECTIVE, params) # 创建扭曲
-
+   """
     img = img.filter(ImageFilter.EDGE_ENHANCE_MORE) # 滤镜，边界加强（阈值更大）
 
-    return img,strs
+    #image保存到内存中
+    buf = StringIO.StringIO()
+    img.save(buf,'JPEG',quality=70)
+
+    buf_str = buf.getvalue()
+    response = make_response(buf_str)
+    response.headers['Content-Type'] = 'image/jpeg'
+
+    return response,strs
 
 @main_blueprint.route('/')
 def index():
@@ -124,7 +133,9 @@ def login():
     form = LoginForm()
     print 'In form %s' %(form.verification_code.data)
     print 'In session %s' %(session.get('code'))
+    #获取表单里面输入的数据
     form_code = form.verification_code.data
+    #获取session中的数字
     session_code = session.get('code')
     #openid_form = OpenIDForm()
 
@@ -210,12 +221,15 @@ def register():
 @main_blueprint.route('/code/')
 def get_code():
     #把strs发给前端,或者在后台使用session保存
-    code_img,strs = create_validate_code()
+    #返回图片和上面的文字
+    response,strs = create_validate_code()
+    #保存文字到session
     session['code'] = strs
-    buf = StringIO.StringIO()
-    code_img.save(buf,'JPEG',quality=70)
+    #image保存到内存中
+    #buf = StringIO.StringIO()
+    #code_img.save(buf,'JPEG',quality=70)
 
-    buf_str = buf.getvalue()
-    response = make_response(buf_str)
-    response.headers['Content-Type'] = 'image/jpeg'
+    #buf_str = buf.getvalue()
+    #response = make_response(buf_str)
+    #response.headers['Content-Type'] = 'image/jpeg'
     return response

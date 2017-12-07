@@ -13,27 +13,22 @@
 {% block content %}
  <div id="page-wrapper">
     <div class="header">
-
       <h1 class="page-header">
            域名管理
       </h1>
         <ol class="breadcrumb">
-
           <li><a href="{{url_for('cdn.domainadmin') }}">域名</a></li>
           <li class="active">数据</li>
         </ol>
-
     </div>
     <div id="page-inner">
-
       <div class="row">
-
         <div class="col-md-12">
-
             <!--   project card -->
             <div class="card">
                 <div class="card-action">
                 <button type="button" style="height:20px" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#dialog" data-title="添加域名" data-btn-txt="添加" data-url="/cdn/domain/create/">添加域名</button>
+                <a class="btn btn-xs btn-primary" href="/cdn/domain/download/">域名下载</a>
                 </div>
                 <div class="card-content">
                     <div class="table-responsive">
@@ -70,7 +65,7 @@
                                     {% endif %}
                                     <td >{{domain['purpose']}}</td>
                                     <td >
-                            <button type="button"  class="btn btn-primary btn-xs" style="height:20px" data-toggle="modal" data-target="#dialog"  data-btn-txt="修改" data-title="更新域名"  data-url="/cdn/domain/update/" data-id="{{domain['id']}}"  >修改</button>
+                            <button type="button"  class="btn btn-primary btn-xs" style="height:20px" data-toggle="modal" data-target="#dialog"  data-btn-txt="修改" data-title="更新域名"  data-url="/cdn/domain/update/?id={{domain['id']}}">修改</button>
                                     </td>
                                      <td >
                             <a class="btn btn-primary btn-xs btn-danger"  style="height:20px"  href="/cdn/domain/delete/?id={{domain['id']}}" onclick="return confirm('确定删除吗?');">删除</a>
@@ -159,32 +154,7 @@
         var that = this;
         $(that).find('.modal-title').text(title);
         $(that).find('.btn-form-submit').text(btn_txt);
-
         $(that).find('.modal-body').load(url);
-
-
-    if(title=='更新域名') {
-        var domainid = button.data('id');
-         console.log(domainid);
-        jQuery.get('/cdn/getdomaininfo/'+domainid, function(data) {
-        console.log(domainid);
-          if(data.id){
-              $('#id').val(data.id);
-              $('#domain').val(data.domain_name);
-              $('#cdn_name').val(data.cname);
-              $('#start_date').val(data.start_date);
-              $('#end_date').val(data.end_date);
-              $('#status_id').val(data.status);
-              $('#project_id').val(data.project_id);
-              $('#purpose').val(data.purpose);
-              } else {
-                alert("数据不存在");
-              }
-        }, 'json')
-        //否则就是添加域名，什么也不需要做。
-        } else   {
-         return;
-        }
 
     });
 

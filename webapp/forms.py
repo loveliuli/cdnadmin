@@ -50,9 +50,9 @@ class PostForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     username = StringField(u'用户名', validators=[DataRequired(), Length(max=255, message=u'填写用户名')])
-    email = TextField(u'邮箱',validators=[DataRequired(), Length(max=255, message=u'填写邮箱地址')])
-    tel = IntegerField(u'手机号', validators=[DataRequired(), Length(min=13,message=u'填写手机号'),NumberRange(min=10000000000, max=20000000000)])
-    password = PasswordField(u'密码', validators=[DataRequired(), Length(min=255, message=u'填写密码')])
+    email = TextField(u'邮箱',validators=[DataRequired(), Length(max=255, message=u'填写邮件地址')])
+    tel = StringField(u'手机号')
+    password = PasswordField(u'密码', validators=[DataRequired(), Length(max=255, message=u'填写密码')])
     confirm = PasswordField(u'确认密码', validators=[DataRequired(),EqualTo('password')])
     submit = SubmitField('注册')
 
